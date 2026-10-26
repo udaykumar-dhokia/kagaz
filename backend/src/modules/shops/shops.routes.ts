@@ -186,3 +186,4 @@ shopsRoutes.delete("/addons/:id", requireShopAuth, async (c) => {
     message: "Add-on removed from catalog",
   });
 });
+

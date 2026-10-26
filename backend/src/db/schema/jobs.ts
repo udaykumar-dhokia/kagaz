@@ -49,3 +49,4 @@ export type PrintJob = typeof printJobs.$inferSelect;
 export type NewPrintJob = typeof printJobs.$inferInsert;
 export type PrintJobItem = typeof printJobItems.$inferSelect;
 export type NewPrintJobItem = typeof printJobItems.$inferInsert;
+

@@ -202,3 +202,4 @@ authRoutes.get("/me", requireShopAuth, async (c) => {
     },
   });
 });
+

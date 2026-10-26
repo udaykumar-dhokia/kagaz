@@ -38,3 +38,4 @@ export async function generateShopQr(slug: string): Promise<GeneratedQrResult> {
     svg,
   };
 }
+

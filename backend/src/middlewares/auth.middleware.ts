@@ -41,3 +41,4 @@ export async function requireShopAuth(c: Context<AppEnv>, next: Next) {
     return c.json({ success: false, message: "Invalid or expired token" }, 401);
   }
 }
+

@@ -45,3 +45,4 @@ export type ShopPrintSettings = typeof shopPrintSettings.$inferSelect;
 export type NewShopPrintSettings = typeof shopPrintSettings.$inferInsert;
 export type ShopAddon = typeof shopAddons.$inferSelect;
 export type NewShopAddon = typeof shopAddons.$inferInsert;
+

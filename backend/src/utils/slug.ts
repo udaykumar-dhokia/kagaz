@@ -16,3 +16,4 @@ export function generateShopSlug(name: string): string {
 export function generateQrToken(): string {
   return crypto.randomBytes(16).toString("hex");
 }
+
