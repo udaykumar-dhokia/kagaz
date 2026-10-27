@@ -44,13 +44,31 @@ function TicketContent({
           setIsLoading(false);
 
           // If status completed and confetti not yet fired
-          if (res.data.status === "COMPLETED" && !hasTriggeredConfetti.current) {
-            hasTriggeredConfetti.current = true;
-            confetti({
-              particleCount: 80,
-              spread: 70,
-              origin: { y: 0.6 },
-            });
+          if (res.data.status === "COMPLETED") {
+            if (typeof window !== "undefined") {
+              localStorage.removeItem(`kagaz_active_job_${shopSlug}`);
+            }
+            if (!hasTriggeredConfetti.current) {
+              hasTriggeredConfetti.current = true;
+              confetti({
+                particleCount: 80,
+                spread: 70,
+                origin: { y: 0.6 },
+              });
+            }
+          } else if (res.data.status === "QUEUED" || res.data.status === "PRINTING") {
+            // Keep active job refreshed in localStorage
+            if (typeof window !== "undefined") {
+              localStorage.setItem(
+                `kagaz_active_job_${shopSlug}`,
+                JSON.stringify({
+                  jobId: res.data.id,
+                  pickupPin: res.data.pickupPin,
+                  totalAmount: res.data.totalAmount,
+                  createdAt: Date.now(),
+                })
+              );
+            }
           }
         }
       } catch (err) {
@@ -226,7 +244,15 @@ function TicketContent({
       </Card>
 
       {/* Print Another Button */}
-      <Link href={`/s/${shopSlug}`} className="block">
+      <Link
+        href={`/s/${shopSlug}`}
+        onClick={() => {
+          if (typeof window !== "undefined") {
+            localStorage.removeItem(`kagaz_active_job_${shopSlug}`);
+          }
+        }}
+        className="block"
+      >
         <Button variant="outline" className="w-full h-11 rounded-xl text-xs font-semibold">
           <PlusCircle className="h-4 w-4 mr-1.5" />
           Print Another Document

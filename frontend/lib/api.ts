@@ -268,3 +268,141 @@ export async function fetchJobStatus(jobId: string): Promise<JobStatusResponse> 
   return res.json();
 }
 
+// ==========================================
+// Shopkeeper Queue & Auth API
+// ==========================================
+
+export interface QueueJobLineItem {
+  id: string;
+  originalFilename: string;
+  pageCount: number;
+  pageRange: string;
+  copies: number;
+  colorMode: "BW" | "COLOR";
+  paperSize: string;
+  isDuplex: boolean;
+  itemPrice: string;
+  fileKey: string;
+}
+
+export interface QueueJob {
+  id: string;
+  pickupPin: string;
+  status: "QUEUED" | "PRINTING" | "COMPLETED" | "CANCELLED";
+  totalAmount: string;
+  paymentStatus: "UNPAID" | "PAID_CASH" | "PAID_UPI";
+  customerPhoneMasked?: string | null;
+  expiresAt: string;
+  createdAt: string;
+  items: QueueJobLineItem[];
+}
+
+export async function loginShop(payload: { email: string; password: string }) {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Login failed");
+  }
+  return data;
+}
+
+export async function registerShop(payload: {
+  name: string;
+  email: string;
+  phone?: string;
+  password: string;
+  isColorEnabled?: boolean;
+  bwSinglePrice?: number;
+  bwDoublePrice?: number;
+  colorSinglePrice?: number;
+  colorDoublePrice?: number;
+}) {
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Registration failed");
+  }
+  return data;
+}
+
+export async function fetchShopMe(token: string) {
+  const res = await fetch(`${API_BASE}/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to authenticate");
+  }
+  return data;
+}
+
+export async function fetchShopQueue(token: string): Promise<{ success: boolean; data: QueueJob[] }> {
+  const res = await fetch(`${API_BASE}/shop/queue`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to load counter queue");
+  }
+  return data;
+}
+
+export async function verifyQueuePin(token: string, pin: string) {
+  const res = await fetch(`${API_BASE}/shop/queue/verify-pin`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ pin }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Invalid or expired PIN");
+  }
+  return data;
+}
+
+export async function completeQueueJob(
+  token: string,
+  jobId: string,
+  paymentStatus: "PAID_CASH" | "PAID_UPI" | "UNPAID" = "PAID_CASH"
+) {
+  const res = await fetch(`${API_BASE}/shop/queue/${jobId}/complete`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ paymentStatus }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to complete job");
+  }
+  return data;
+}
+
+export async function cancelQueueJob(token: string, jobId: string) {
+  const res = await fetch(`${API_BASE}/shop/queue/${jobId}/cancel`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to cancel job");
+  }
+  return data;
+}
+
+

@@ -18,8 +18,12 @@ function OptionsContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Retrieve doc from session storage
-    const storedDoc = sessionStorage.getItem(`kagaz_doc_${shopSlug}`);
+    // 1. Retrieve doc from session or local storage (resilient against refresh / tab close)
+    let storedDoc = sessionStorage.getItem(`kagaz_doc_${shopSlug}`);
+    if (!storedDoc) {
+      storedDoc = localStorage.getItem(`kagaz_pending_doc_${shopSlug}`);
+    }
+
     if (!storedDoc) {
       router.replace(`/s/${shopSlug}`);
       return;
