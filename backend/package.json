@@ -8,7 +8,11 @@
     "start": "bun src/index.ts",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:up": "docker compose -f ../docker-compose.yml up -d",
+    "db:down": "docker compose -f ../docker-compose.yml down",
+    "agent": "bun src/agent/kagaz-agent.ts"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
@@ -21,8 +25,10 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.14",
+    "pdf-lib": "^1.17.1",
     "postgres": "^3.4.9",
     "qrcode": "^1.5.4",
     "zod": "^4.6.7"

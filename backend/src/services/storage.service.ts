@@ -1,0 +1,175 @@
+import { v2 as cloudinary } from "cloudinary";
+import crypto from "crypto";
+import path from "path";
+import fs from "fs/promises";
+import { existsSync } from "fs";
+import { env } from "../config/env";
+
+export interface SignedUploadResult {
+  uploadUrl: string;
+  fileKey: string;
+  storageMode: "cloudinary" | "local";
+  fields?: {
+    apiKey: string;
+    timestamp: number;
+    signature: string;
+    folder: string;
+    publicId: string;
+    resourceType: string;
+  };
+}
+
+const isCloudinaryConfigured = Boolean(
+  env.CLOUDINARY_URL || (env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SECRET)
+);
+
+if (isCloudinaryConfigured) {
+  if (env.CLOUDINARY_URL) {
+    cloudinary.config({ cloudinary_url: env.CLOUDINARY_URL });
+  } else {
+    cloudinary.config({
+      cloud_name: env.CLOUDINARY_CLOUD_NAME,
+      api_key: env.CLOUDINARY_API_KEY,
+      api_secret: env.CLOUDINARY_API_SECRET,
+      secure: true,
+    });
+  }
+}
+
+const LOCAL_STORAGE_DIR = path.resolve(process.cwd(), "temp/uploads");
+
+async function ensureLocalDir() {
+  if (!existsSync(LOCAL_STORAGE_DIR)) {
+    await fs.mkdir(LOCAL_STORAGE_DIR, { recursive: true });
+  }
+}
+
+export function sanitizeFilename(filename: string): string {
+  return filename
+    .replace(/[^a-zA-Z0-9._-]/g, "_")
+    .replace(/_{2,}/g, "_")
+    .slice(0, 100);
+}
+
+/**
+ * Generates direct signed upload parameters for Cloudinary
+ * or falls back to local direct upload if credentials are not configured.
+ */
+export async function generatePresignedUploadUrl(
+  shopId: string,
+  originalFilename: string,
+  contentType: string = "application/pdf"
+): Promise<SignedUploadResult> {
+  const sanitized = sanitizeFilename(originalFilename);
+  const randomToken = crypto.randomBytes(6).toString("hex");
+  const folder = `kagaz/uploads/${shopId}`;
+  const publicId = `${Date.now()}-${randomToken}-${sanitized}`;
+  const fileKey = `${folder}/${publicId}`;
+
+  if (isCloudinaryConfigured) {
+    const cloudName = env.CLOUDINARY_CLOUD_NAME || cloudinary.config().cloud_name;
+    const apiKey = env.CLOUDINARY_API_KEY || cloudinary.config().api_key;
+    const apiSecret = env.CLOUDINARY_API_SECRET || cloudinary.config().api_secret;
+
+    if (!cloudName || !apiKey || !apiSecret) {
+      throw new Error("Cloudinary configuration incomplete");
+    }
+
+    const timestamp = Math.round(Date.now() / 1000);
+    const resourceType = "raw"; // Standard for raw PDFs and documents
+
+    const paramsToSign = {
+      folder,
+      public_id: publicId,
+      timestamp,
+    };
+
+    const signature = cloudinary.utils.api_sign_request(paramsToSign, apiSecret);
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+
+    return {
+      uploadUrl,
+      fileKey,
+      storageMode: "cloudinary",
+      fields: {
+        apiKey,
+        timestamp,
+        signature,
+        folder,
+        publicId,
+        resourceType,
+      },
+    };
+  }
+
+  // Local fallback mode for development
+  await ensureLocalDir();
+  return {
+    uploadUrl: `/api/v1/jobs/upload-direct?fileKey=${encodeURIComponent(fileKey)}`,
+    fileKey,
+    storageMode: "local",
+  };
+}
+
+export async function saveLocalFile(fileKey: string, buffer: Buffer): Promise<void> {
+  await ensureLocalDir();
+  const filePath = path.join(LOCAL_STORAGE_DIR, path.basename(fileKey));
+  await fs.writeFile(filePath, buffer);
+}
+
+/**
+ * Retrieves the raw document buffer for PDF inspection or print spooling.
+ */
+export async function getFileBuffer(fileKey: string): Promise<Buffer> {
+  if (isCloudinaryConfigured) {
+    // Generate secure URL to fetch the raw file from Cloudinary
+    const fileUrl = cloudinary.url(fileKey, {
+      resource_type: "raw",
+      secure: true,
+    });
+
+    const response = await fetch(fileUrl);
+    if (!response.ok) {
+      // Try fallback with resource_type: "image" or "auto" in case it was uploaded as an image
+      const fallbackUrl = cloudinary.url(fileKey, { resource_type: "image", secure: true });
+      const fallbackResp = await fetch(fallbackUrl);
+      if (!fallbackResp.ok) {
+        throw new Error(`Failed to download file from Cloudinary: ${response.statusText}`);
+      }
+      const fallbackArray = await fallbackResp.arrayBuffer();
+      return Buffer.from(fallbackArray);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    return Buffer.from(arrayBuffer);
+  }
+
+  // Local fallback
+  const filePath = path.join(LOCAL_STORAGE_DIR, path.basename(fileKey));
+  return await fs.readFile(filePath);
+}
+
+/**
+ * Permanently shreds and deletes the customer file from storage.
+ */
+export async function deleteDocument(fileKey: string): Promise<void> {
+  try {
+    if (isCloudinaryConfigured) {
+      // Try deleting as raw
+      const result = await cloudinary.uploader.destroy(fileKey, { resource_type: "raw" });
+      if (result.result !== "ok") {
+        // Fallback try image resource_type
+        await cloudinary.uploader.destroy(fileKey, { resource_type: "image" });
+      }
+      return;
+    }
+
+    // Local fallback deletion
+    const filePath = path.join(LOCAL_STORAGE_DIR, path.basename(fileKey));
+    if (existsSync(filePath)) {
+      await fs.unlink(filePath);
+    }
+  } catch (err) {
+    console.warn(`Failed to shred document ${fileKey}:`, err);
+  }
+}

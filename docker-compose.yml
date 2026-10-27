@@ -1,0 +1,36 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: kagaz-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: kagaz
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kagaz"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Lightweight Web Database Management GUI (Adminer)
+  # Access at http://localhost:8080
+  adminer:
+    image: adminer:latest
+    container_name: kagaz-adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    name: kagaz_postgres_data
+
