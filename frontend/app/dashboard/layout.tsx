@@ -109,18 +109,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <SidebarProvider defaultOpen>
       <Sidebar collapsible="icon" className="border-r border-neutral-200 dark:border-neutral-800">
         {/* Sidebar Header */}
-        <SidebarHeader className="border-b border-neutral-200 dark:border-neutral-800 p-4">
+        <SidebarHeader className="border-b border-neutral-200 dark:border-neutral-800 p-3">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold shadow-xs">
               <Printer className="h-5 w-5" />
             </div>
-            <div className="overflow-hidden">
-              <h3 className="font-bold text-sm tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
+            <div className="overflow-hidden group-data-[collapsible=icon]:hidden">
+              <h3 className="font-semibold text-sm tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
                 {shopData?.name || "Kagaz Counter"}
               </h3>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[11px] text-neutral-500 font-medium">Terminal Online</span>
+                <span className="text-[11px] text-neutral-500 font-medium">Terminal online</span>
               </div>
             </div>
           </div>
@@ -129,8 +129,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Sidebar Navigation */}
         <SidebarContent className="p-2">
           <SidebarGroup>
-            <SidebarGroupLabel className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider px-2 mb-1">
-              Counter Operations
+            <SidebarGroupLabel className="text-[11px] font-semibold text-neutral-400 tracking-wider px-2 mb-1 group-data-[collapsible=icon]:hidden">
+              Counter operations
             </SidebarGroupLabel>
             <SidebarMenu>
               {navItems.map((item) => {
@@ -148,7 +148,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       }`}
                     >
                       <Icon className="h-4 w-4 shrink-0" />
-                      <span>{item.title}</span>
+                      <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -158,30 +158,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </SidebarContent>
 
         {/* Sidebar Footer */}
-        <SidebarFooter className="border-t border-neutral-200 dark:border-neutral-800 p-2 space-y-1">
-          {shopData?.slug && (
-            <Link
-              href={`/s/${shopData.slug}`}
-              target="_blank"
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-900 transition-colors"
-            >
-              <span className="flex items-center gap-1.5">
-                <Store className="h-3.5 w-3.5" />
-                Customer Portal
-              </span>
-              <ExternalLink className="h-3 w-3 text-neutral-400" />
-            </Link>
-          )}
+        <SidebarFooter className="border-t border-neutral-200 dark:border-neutral-800 p-2">
+          <SidebarMenu>
+            {shopData?.slug && (
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  render={<Link href={`/s/${shopData.slug}`} target="_blank" />}
+                  tooltip="Customer portal"
+                  className="text-xs font-medium text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-900"
+                >
+                  <Store className="h-4 w-4 shrink-0" />
+                  <span className="truncate group-data-[collapsible=icon]:hidden">Customer portal</span>
+                  <ExternalLink className="h-3 w-3 ml-auto text-neutral-400 group-data-[collapsible=icon]:hidden" />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleLogout}
-            className="w-full justify-start text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/20"
-          >
-            <LogOut className="h-3.5 w-3.5 mr-2" />
-            Sign Out
-          </Button>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={handleLogout}
+                tooltip="Sign out"
+                className="text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/20"
+              >
+                <LogOut className="h-4 w-4 shrink-0" />
+                <span className="truncate group-data-[collapsible=icon]:hidden">Sign out</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
 
@@ -216,7 +219,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               ) : (
                 <>
                   <Bell className="h-3.5 w-3.5 mr-1.5 text-emerald-500" />
-                  Chimes On
+                  Chimes on
                 </>
               )}
             </Button>

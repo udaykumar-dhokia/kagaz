@@ -96,7 +96,7 @@ function TicketContent({
     if (!job?.pickupPin) return;
     navigator.clipboard.writeText(job.pickupPin);
     setCopied(true);
-    toast.success("PIN copied to clipboard!");
+    toast.success("Pin copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -128,14 +128,14 @@ function TicketContent({
           Counter Pickup Ticket
         </h1>
         <p className="text-xs text-neutral-500">
-          Share this PIN at the counter to start printing.
+          Share this pin at the counter to start printing.
         </p>
       </div>
 
       {/* The Giant PIN Card */}
       <Card className="border-2 border-neutral-900 dark:border-neutral-100 shadow-md bg-white dark:bg-neutral-900 overflow-hidden text-center">
-        <div className="bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 py-2.5 px-4 text-xs font-bold tracking-widest uppercase">
-          Pickup PIN
+        <div className="bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 py-2.5 px-4 text-xs font-semibold tracking-wide">
+          Pickup pin
         </div>
 
         <CardContent className="p-6 sm:p-8 space-y-4">
@@ -175,8 +175,8 @@ function TicketContent({
       {/* Live Order Status Stepper */}
       <Card className="border border-neutral-200 dark:border-neutral-800 p-5 space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-            Live Print Status
+          <span className="text-xs font-semibold text-neutral-500 tracking-wider">
+            Live print status
           </span>
           {isCompleted ? (
             <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white text-xs">

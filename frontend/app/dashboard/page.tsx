@@ -64,7 +64,7 @@ export default function DashboardQueuePage() {
       // Play audio chime
       playChime();
 
-      toast.info(`🔔 New Print Order: PIN ${data.pickupPin} (₹${data.totalAmount})`, {
+      toast.info(`🔔 New print order: Pin ${data.pickupPin} (₹${data.totalAmount})`, {
         duration: 5000,
       });
 
@@ -102,7 +102,7 @@ export default function DashboardQueuePage() {
       setSelectedJob(verifiedJob);
       setIsModalOpen(true);
     } catch (err: any) {
-      toast.error(err.message || `No active job found for PIN "${pin}"`);
+      toast.error(err.message || `No active job found for pin "${pin}"`);
     } finally {
       setIsSearchingPin(false);
     }
@@ -133,7 +133,7 @@ export default function DashboardQueuePage() {
               Counter Print Queue
             </h1>
             <p className="text-xs text-neutral-500">
-              Type the customer's 4-digit PIN to print instantly.
+              Type the customer's 4-digit pin to print instantly.
             </p>
           </div>
 

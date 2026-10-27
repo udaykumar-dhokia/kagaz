@@ -173,10 +173,10 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
               <div>
                 <div className="flex items-center gap-2">
                   <h4 className="font-bold text-sm text-neutral-950 dark:text-neutral-50">
-                    Active Job PIN: {activeRecoveryJob.pickupPin}
+                    Active job pin: {activeRecoveryJob.pickupPin}
                   </h4>
                   <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                    {activeRecoveryJob.status === "PRINTING" ? "Printing Now" : "In Queue"}
+                    {activeRecoveryJob.status === "PRINTING" ? "Printing now" : "In queue"}
                   </Badge>
                 </div>
                 <p className="text-xs text-neutral-600 dark:text-neutral-300 mt-0.5">

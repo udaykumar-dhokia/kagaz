@@ -405,4 +405,171 @@ export async function cancelQueueJob(token: string, jobId: string) {
   return data;
 }
 
+// ==========================================
+// Phase 4: Settings, Standee & Ledger API
+// ==========================================
+
+export interface UpdateCatalogPayload {
+  isBwEnabled?: boolean;
+  bwSinglePrice?: number;
+  bwDoublePrice?: number;
+  isColorEnabled?: boolean;
+  colorSinglePrice?: number;
+  colorDoublePrice?: number;
+  isDuplexEnabled?: boolean;
+  supportedPaperSizes?: string[];
+}
+
+export async function updateShopCatalog(token: string, payload: UpdateCatalogPayload) {
+  const res = await fetch(`${API_BASE}/shops/catalog/update`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to update catalog settings");
+  }
+  return data;
+}
+
+export async function fetchShopStandee(token: string) {
+  const res = await fetch(`${API_BASE}/shops/qr/standee`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to load standee QR assets");
+  }
+  return data;
+}
+
+export async function addShopAddon(
+  token: string,
+  payload: { name: string; type: "BINDING" | "LAMINATION" | "STAPLING" | "CUSTOM"; price: number }
+) {
+  const res = await fetch(`${API_BASE}/shops/addons`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to add service");
+  }
+  return data;
+}
+
+export async function deleteShopAddon(token: string, addonId: string) {
+  const res = await fetch(`${API_BASE}/shops/addons/${addonId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to remove service");
+  }
+  return data;
+}
+
+export interface DailyLedgerResponse {
+  success: boolean;
+  data: {
+    date: string;
+    summary: {
+      totalJobsCompleted: number;
+      activeQueueCount: number;
+      totalRevenue: number;
+      cashCollected: number;
+      upiCollected: number;
+      unpaidAmount: number;
+      totalPagesPrinted: number;
+      bwPagesPrinted: number;
+      colorPagesPrinted: number;
+    };
+  };
+}
+
+export async function fetchDailyLedger(token: string, date?: string): Promise<DailyLedgerResponse> {
+  const url = date
+    ? `${API_BASE}/shop/ledger/daily?date=${date}`
+    : `${API_BASE}/shop/ledger/daily`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch daily ledger");
+  }
+  return data;
+}
+
+export interface LedgerHistoryResponse {
+  success: boolean;
+  data: {
+    jobs: {
+      id: string;
+      pickupPin: string;
+      status: string;
+      totalAmount: string;
+      paymentStatus: string;
+      customerPhoneMasked?: string | null;
+      completedAt: string;
+      createdAt: string;
+    }[];
+    pagination: {
+      limit: number;
+      offset: number;
+      count: number;
+    };
+  };
+}
+
+export async function fetchLedgerHistory(
+  token: string,
+  limit: number = 30,
+  offset: number = 0
+): Promise<LedgerHistoryResponse> {
+  const res = await fetch(
+    `${API_BASE}/shop/ledger/history?limit=${limit}&offset=${offset}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    }
+  );
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch order history");
+  }
+  return data;
+}
+
+export async function updateLedgerPayment(
+  token: string,
+  jobId: string,
+  paymentStatus: "PAID_CASH" | "PAID_UPI" | "UNPAID"
+) {
+  const res = await fetch(`${API_BASE}/shop/ledger/${jobId}/payment`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ paymentStatus }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to update payment status");
+  }
+  return data;
+}
+
 

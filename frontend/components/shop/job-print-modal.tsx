@@ -122,7 +122,7 @@ export function JobPrintModal({
     setIsCompleting(true);
     try {
       await completeQueueJob(token, job.id, paymentChoice);
-      toast.success(`Job PIN ${job.pickupPin} completed & shredded from cloud storage!`);
+      toast.success(`Job Pin ${job.pickupPin} completed & shredded from cloud storage!`);
       onJobCompleted(job.id);
       onClose();
     } catch (err: any) {
@@ -133,11 +133,11 @@ export function JobPrintModal({
   };
 
   const handleCancelOrder = async () => {
-    if (!confirm(`Are you sure you want to cancel order PIN ${job.pickupPin}?`)) return;
+    if (!confirm(`Are you sure you want to cancel order Pin ${job.pickupPin}?`)) return;
 
     try {
       await cancelQueueJob(token, job.id);
-      toast.info(`Order PIN ${job.pickupPin} cancelled`);
+      toast.info(`Order Pin ${job.pickupPin} cancelled`);
       onJobCompleted(job.id);
       onClose();
     } catch (err: any) {
@@ -148,25 +148,25 @@ export function JobPrintModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md p-6 border-neutral-200 dark:border-neutral-800">
-        <DialogHeader className="space-y-1 pb-2">
-          <div className="flex items-center justify-between">
-            <Badge variant="outline" className="font-mono text-sm px-2.5 py-0.5 font-bold tracking-widest">
-              PIN: {job.pickupPin}
+        <DialogHeader className="space-y-1 pb-2 pr-10">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="font-mono text-xs px-2.5 py-0.5 font-bold tracking-wide">
+              Pin: {job.pickupPin}
             </Badge>
             <Badge
               variant={job.status === "PRINTING" ? "default" : "secondary"}
               className="text-xs"
             >
-              {job.status === "PRINTING" ? "Printing Now" : "Waiting in Queue"}
+              {job.status === "PRINTING" ? "Printing now" : "Waiting in queue"}
             </Badge>
           </div>
-          <DialogTitle className="text-xl font-extrabold text-neutral-950 dark:text-neutral-50 pt-1">
+          <DialogTitle className="text-xl font-bold text-neutral-950 dark:text-neutral-50 pt-1">
             Print Order Details
           </DialogTitle>
           <DialogDescription className="text-xs text-neutral-500">
             {job.customerPhoneMasked
               ? `Customer: ${job.customerPhoneMasked}`
-              : "Walk-in Guest Order (Anonymous)"}
+              : "Walk-in guest order (Anonymous)"}
           </DialogDescription>
         </DialogHeader>
 
@@ -200,12 +200,12 @@ export function JobPrintModal({
                   }`}
                 >
                   <Palette className="h-3 w-3 mr-1 inline" />
-                  {it.colorMode === "COLOR" ? "Full Color" : "Black & White"}
+                  {it.colorMode === "COLOR" ? "Full color" : "Black & white"}
                 </Badge>
 
                 <Badge variant="outline" className="text-[11px]">
                   <Layers className="h-3 w-3 mr-1 inline" />
-                  {it.isDuplex ? "Double-sided (Duplex)" : "Single-sided"}
+                  {it.isDuplex ? "Double-sided (duplex)" : "Single-sided"}
                 </Badge>
 
                 <Badge variant="outline" className="text-[11px]">
@@ -213,7 +213,7 @@ export function JobPrintModal({
                   {it.copies} {it.copies > 1 ? "Copies" : "Copy"}
                 </Badge>
 
-                <Badge variant="outline" className="text-[11px] uppercase">
+                <Badge variant="outline" className="text-[11px]">
                   {it.paperSize}
                 </Badge>
               </div>
@@ -223,7 +223,7 @@ export function JobPrintModal({
           {/* Amount to Collect Banner */}
           <div className="p-3.5 rounded-xl border border-emerald-500/20 bg-emerald-50/40 dark:bg-emerald-950/20 flex items-center justify-between">
             <span className="text-xs font-bold text-emerald-900 dark:text-emerald-300">
-              Total to Collect:
+              Total to collect:
             </span>
             <span className="text-2xl font-black text-emerald-950 dark:text-emerald-100">
               ₹{job.totalAmount}
@@ -232,7 +232,7 @@ export function JobPrintModal({
 
           {/* Payment Method Toggle */}
           <div className="flex items-center justify-between text-xs pt-1">
-            <span className="text-neutral-500 font-medium">Mark Paid as:</span>
+            <span className="text-neutral-500 font-medium">Mark paid as:</span>
             <div className="flex gap-2">
               <Button
                 type="button"
@@ -241,7 +241,7 @@ export function JobPrintModal({
                 onClick={() => setPaymentChoice("PAID_CASH")}
                 className="h-7 text-xs px-2.5 font-semibold"
               >
-                Cash Collected
+                Cash collected
               </Button>
               <Button
                 type="button"
@@ -250,7 +250,7 @@ export function JobPrintModal({
                 onClick={() => setPaymentChoice("PAID_UPI")}
                 className="h-7 text-xs px-2.5 font-semibold"
               >
-                UPI QR Paid
+                Upi qr paid
               </Button>
             </div>
           </div>
@@ -267,7 +267,7 @@ export function JobPrintModal({
             onClick={handleCancelOrder}
             className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 order-3 sm:order-1"
           >
-            Cancel Order
+            Cancel order
           </Button>
 
           <Button
@@ -277,7 +277,7 @@ export function JobPrintModal({
             className="h-11 px-5 rounded-xl text-xs font-bold flex-1 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm order-1 sm:order-2"
           >
             <Printer className="h-4 w-4 mr-1.5" />
-            {isPrinting ? "Spooling PDF..." : "Print Stream (Spacebar)"}
+            {isPrinting ? "Spooling PDF..." : "Print stream (Spacebar)"}
           </Button>
 
           <Button
@@ -287,7 +287,7 @@ export function JobPrintModal({
             className="h-11 px-4 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm order-2 sm:order-3"
           >
             <CheckCircle2 className="h-4 w-4 mr-1.5" />
-            {isCompleting ? "Shredding..." : "Done & Shred"}
+            {isCompleting ? "Shredding..." : "Done & shred"}
           </Button>
         </DialogFooter>
       </DialogContent>

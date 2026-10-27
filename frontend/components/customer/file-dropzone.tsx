@@ -149,7 +149,7 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
             </Button>
 
             <div className="flex items-center gap-2 mt-6 text-xs text-neutral-400 dark:text-neutral-500">
-              <span>PDF up to 50MB</span>
+              <span>Pdf up to 50 mb</span>
               <span>•</span>
               <span>Auto-deleted after printing</span>
             </div>
@@ -195,7 +195,7 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
                   <Badge variant="secondary" className="text-xs font-semibold px-2 py-0.5">
                     {currentDoc.pageCount} {currentDoc.pageCount === 1 ? "page" : "pages"}
                   </Badge>
-                  <Badge variant="outline" className="text-xs px-2 py-0.5 uppercase">
+                  <Badge variant="outline" className="text-xs px-2 py-0.5">
                     {currentDoc.paperSize}
                   </Badge>
                   <span className="text-xs text-neutral-500">

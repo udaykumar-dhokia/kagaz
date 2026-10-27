@@ -57,7 +57,7 @@ export default function HomePage() {
         </h1>
 
         <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl">
-          Scan the counter QR code, upload your documents to print, and tell your 4-digit PIN. 
+          Scan the counter qr code, upload your documents to print, and tell your 4-digit pin. 
           Files are permanently deleted immediately after printing.
         </p>
 
@@ -103,9 +103,9 @@ export default function HomePage() {
               <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600">
                 <Zap className="h-5 w-5" />
               </div>
-              <h3 className="font-bold text-sm text-neutral-900 dark:text-neutral-100">2. 4-Digit Pickup PIN</h3>
+              <h3 className="font-bold text-sm text-neutral-900 dark:text-neutral-100">2. 4-Digit Pickup Pin</h3>
               <p className="text-xs text-neutral-500 leading-relaxed">
-                Customer shows a 4-digit PIN. Shopkeeper types it on the counter PC and prints with 1 click. Zero folder searching.
+                Customer shows a 4-digit pin. Shopkeeper types it on the counter PC and prints with 1 click. Zero folder searching.
               </p>
             </CardContent>
           </Card>

@@ -159,7 +159,7 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
         localStorage.removeItem(`kagaz_pending_doc_${shopSlug}`);
       }
 
-      toast.success("Print job created! Showing your 4-digit PIN.");
+      toast.success("Print job created! Showing your 4-digit pin.");
       onOrderCreated(res.data);
     } catch (err: any) {
       toast.error(err.message || "Failed to create order");
@@ -436,10 +436,10 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
           className="w-full h-12 rounded-xl text-base font-bold shadow-sm flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
-            <span>Generating 4-Digit PIN...</span>
+            <span>Generating 4-digit pin...</span>
           ) : (
             <>
-              <span>Get 4-Digit Pickup PIN</span>
+              <span>Get 4-digit pickup pin</span>
               <ArrowRight className="h-4 w-4" />
             </>
           )}
