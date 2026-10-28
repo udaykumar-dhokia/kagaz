@@ -96,7 +96,7 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                 <TableCell>
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 font-medium text-xs text-neutral-900 dark:text-neutral-100">
-                      <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
+                      <FileText className="h-3.5 w-3.5 text-neutral-500 dark:text-neutral-400 shrink-0" />
                       <span className="truncate max-w-[240px]">
                         {firstItem?.originalFilename || "Document.pdf"}
                       </span>
@@ -110,11 +110,7 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
 
                       <Badge
                         variant="outline"
-                        className={`px-1.5 py-0 text-[10px] rounded-md font-normal ${
-                          firstItem?.colorMode === "COLOR"
-                            ? "border-amber-500 text-amber-700 dark:text-amber-300"
-                            : ""
-                        }`}
+                        className="px-1.5 py-0 text-[10px] rounded-md font-normal text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800"
                       >
                         {firstItem?.colorMode === "COLOR" ? "Color" : "B&W"}
                       </Badge>
@@ -148,7 +144,7 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                   <div className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">
                     ₹{job.totalAmount}
                   </div>
-                  <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-200 px-1 py-0 rounded-md font-normal">
+                  <Badge variant="outline" className="text-[10px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800 px-1 py-0 rounded-md font-normal">
                     {job.paymentStatus === "PAID_UPI" ? "UPI" : "Cash"}
                   </Badge>
                 </TableCell>
@@ -168,7 +164,7 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                       size="sm"
                       variant="outline"
                       onClick={() => onQuickComplete(job.id)}
-                      className="h-8 w-8 p-0 rounded-lg text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
+                      className="h-8 w-8 p-0 rounded-lg text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-800"
                       title="Quick complete"
                     >
                       <CheckCircle2 className="h-4 w-4" />

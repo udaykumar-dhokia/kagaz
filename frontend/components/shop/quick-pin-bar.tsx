@@ -41,7 +41,7 @@ export function QuickPinBar({ onSearchPin, isLoading }: QuickPinBarProps) {
     <form onSubmit={handleSubmit} className="w-full">
       <div className="relative flex items-center">
         <div className="absolute left-3.5 flex items-center pointer-events-none text-neutral-400">
-          <ScanLine className="h-4 w-4 text-primary" />
+          <ScanLine className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
         </div>
 
         <Input

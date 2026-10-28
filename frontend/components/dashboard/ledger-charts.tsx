@@ -84,7 +84,7 @@ export function RevenueTimelineChart({
       <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <CardTitle className="text-sm font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
-            <TrendingUp className="h-4 w-4 text-primary" />
+            <TrendingUp className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
             <span>Revenue & Volume Analysis</span>
           </CardTitle>
           <CardDescription className="text-xs text-neutral-500">
@@ -125,17 +125,17 @@ export function RevenueTimelineChart({
                 {activePoint.label}
               </span>
               <span className="text-neutral-400">•</span>
-              <span className="text-primary font-semibold">
+              <span className="text-neutral-900 dark:text-neutral-100 font-semibold">
                 ₹{activePoint.revenue.toFixed(2)}
               </span>
               <span className="text-neutral-500 text-[11px]">
                 ({activePoint.orders} {activePoint.orders === 1 ? "order" : "orders"})
               </span>
               <span className="text-neutral-400 hidden sm:inline">•</span>
-              <span className="text-emerald-600 dark:text-emerald-400 text-[11px] hidden sm:inline">
+              <span className="text-neutral-600 dark:text-neutral-400 text-[11px] hidden sm:inline">
                 Cash: ₹{activePoint.cash.toFixed(2)}
               </span>
-              <span className="text-blue-600 dark:text-blue-400 text-[11px] hidden sm:inline">
+              <span className="text-neutral-600 dark:text-neutral-400 text-[11px] hidden sm:inline">
                 UPI: ₹{activePoint.upi.toFixed(2)}
               </span>
             </div>
@@ -249,7 +249,7 @@ export function RevenueTimelineChart({
                       textAnchor="middle"
                       className={`text-[9px] font-sans ${
                         isHovered
-                          ? "fill-primary font-semibold"
+                          ? "fill-neutral-900 dark:fill-neutral-100 font-semibold"
                           : "fill-neutral-400 dark:fill-neutral-500"
                       }`}
                     >
@@ -298,7 +298,7 @@ export function PaymentSplitDonut({
     <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs rounded-xl flex flex-col justify-between">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
-          <CreditCard className="h-4 w-4 text-blue-600" />
+          <CreditCard className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
           <span>Payment Method Split</span>
         </CardTitle>
         <CardDescription className="text-xs text-neutral-500">
@@ -394,12 +394,12 @@ export function PaymentSplitDonut({
           </div>
 
           {unpaidAmount > 0 && (
-            <div className="flex items-center justify-between text-amber-600 dark:text-amber-400">
+            <div className="flex items-center justify-between text-neutral-600 dark:text-neutral-400">
               <div className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-500 shrink-0" />
+                <span className="h-2.5 w-2.5 rounded-full bg-neutral-400 shrink-0" />
                 <span>Unpaid / Pending</span>
               </div>
-              <span className="font-semibold">₹{unpaidAmount.toFixed(2)}</span>
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">₹{unpaidAmount.toFixed(2)}</span>
             </div>
           )}
         </div>
@@ -429,7 +429,7 @@ export function PrintVolumeBreakdownBar({
     <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs rounded-xl flex flex-col justify-between">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
-          <Palette className="h-4 w-4 text-amber-500" />
+          <Palette className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
           <span>Print Volume & Paper Usage</span>
         </CardTitle>
         <CardDescription className="text-xs text-neutral-500">
@@ -487,12 +487,12 @@ export function PrintVolumeBreakdownBar({
             </span>
           </div>
 
-          <div className="flex items-center justify-between text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800/40 mt-1">
+          <div className="flex items-center justify-between text-neutral-800 dark:text-neutral-200 bg-neutral-100/70 dark:bg-neutral-800/40 px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 mt-1">
             <div className="flex items-center gap-1.5">
-              <Layers className="h-3.5 w-3.5" />
+              <Layers className="h-3.5 w-3.5 text-neutral-500 dark:text-neutral-400" />
               <span className="text-[11px] font-medium">Duplex Paper Saved:</span>
             </div>
-            <span className="text-[11px] font-semibold">
+            <span className="text-[11px] font-semibold text-neutral-900 dark:text-neutral-100">
               {duplexSheets} sheets saved
             </span>
           </div>

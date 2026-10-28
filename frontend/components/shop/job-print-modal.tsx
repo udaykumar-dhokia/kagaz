@@ -176,7 +176,7 @@ export function JobPrintModal({
               className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2"
             >
               <div className="flex items-center gap-2 overflow-hidden">
-                <FileText className="h-4 w-4 shrink-0 text-primary" />
+                <FileText className="h-4 w-4 shrink-0 text-neutral-500 dark:text-neutral-400" />
                 <span className="font-medium text-xs text-neutral-900 dark:text-neutral-100 truncate">
                   {it.originalFilename}
                 </span>
@@ -184,34 +184,30 @@ export function JobPrintModal({
 
               {/* Specs Badges */}
               <div className="flex flex-wrap gap-1.5 text-xs">
-                <Badge variant="secondary" className="rounded-md font-normal text-[11px]">
+                <Badge variant="secondary" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300">
                   {it.pageCount} {it.pageCount === 1 ? "page" : "pages"}
                   {it.pageRange !== "all" && ` (${it.pageRange})`}
                 </Badge>
 
                 <Badge
-                  variant={it.colorMode === "COLOR" ? "default" : "outline"}
-                  className={`rounded-md text-[11px] font-normal ${
-                    it.colorMode === "COLOR"
-                      ? "bg-amber-500 hover:bg-amber-600 text-white font-medium"
-                      : ""
-                  }`}
+                  variant="outline"
+                  className="rounded-md text-[11px] font-normal text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800"
                 >
-                  <Palette className="h-3 w-3 mr-1 inline" />
+                  <Palette className="h-3 w-3 mr-1 inline text-neutral-500" />
                   {it.colorMode === "COLOR" ? "Color" : "B&W"}
                 </Badge>
 
-                <Badge variant="outline" className="rounded-md font-normal text-[11px]">
-                  <Layers className="h-3 w-3 mr-1 inline" />
+                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800">
+                  <Layers className="h-3 w-3 mr-1 inline text-neutral-500" />
                   {it.isDuplex ? "Double-Sided" : "Single-Sided"}
                 </Badge>
 
-                <Badge variant="outline" className="rounded-md font-normal text-[11px]">
-                  <Copy className="h-3 w-3 mr-1 inline" />
+                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800">
+                  <Copy className="h-3 w-3 mr-1 inline text-neutral-500" />
                   {it.copies} {it.copies > 1 ? "Copies" : "Copy"}
                 </Badge>
 
-                <Badge variant="outline" className="rounded-md font-normal text-[11px]">
+                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800">
                   {it.paperSize}
                 </Badge>
               </div>
@@ -219,11 +215,11 @@ export function JobPrintModal({
           ))}
 
           {/* Amount Banner */}
-          <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-50/40 dark:bg-emerald-950/20 flex items-center justify-between">
-            <span className="text-xs font-medium text-emerald-900 dark:text-emerald-300">
+          <div className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between">
+            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
               Total:
             </span>
-            <span className="text-xl font-semibold text-emerald-950 dark:text-emerald-100">
+            <span className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
               ₹{job.totalAmount}
             </span>
           </div>
@@ -282,7 +278,7 @@ export function JobPrintModal({
             type="button"
             onClick={handleMarkCompleted}
             disabled={isCompleting}
-            className="h-9 px-4 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+            className="h-9 px-4 rounded-lg text-xs font-medium bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 shadow-xs"
           >
             <CheckCircle2 className="h-4 w-4 mr-1.5" />
             {isCompleting ? "Saving..." : "Complete"}

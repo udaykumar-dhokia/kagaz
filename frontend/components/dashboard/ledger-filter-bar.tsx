@@ -142,7 +142,7 @@ export function LedgerFilterBar({
           className="p-3 bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl flex flex-wrap items-center gap-3 animate-in fade-in slide-in-from-top-1"
         >
           <div className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400">
-            <Calendar className="h-4 w-4 text-primary" />
+            <Calendar className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
             <span className="font-medium">Custom Range:</span>
           </div>
 

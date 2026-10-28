@@ -276,8 +276,8 @@ export default function DashboardLedgerPage() {
         {/* Cash in Drawer */}
         <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
-            <span className="text-[11px] font-medium text-emerald-600 flex items-center gap-1">
-              <Banknote className="h-3.5 w-3.5" /> Cash in Drawer
+            <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 flex items-center gap-1.5">
+              <Banknote className="h-3.5 w-3.5 text-neutral-500 dark:text-neutral-400" /> Cash in Drawer
             </span>
             <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               ₹{summary?.cashCollected.toFixed(2) || "0.00"}
@@ -289,8 +289,8 @@ export default function DashboardLedgerPage() {
         {/* UPI Collected */}
         <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
-            <span className="text-[11px] font-medium text-blue-600 flex items-center gap-1">
-              <CreditCard className="h-3.5 w-3.5" /> UPI Settlement
+            <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 flex items-center gap-1.5">
+              <CreditCard className="h-3.5 w-3.5 text-neutral-500 dark:text-neutral-400" /> UPI Settlement
             </span>
             <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               ₹{summary?.upiCollected.toFixed(2) || "0.00"}
@@ -439,25 +439,25 @@ export default function DashboardLedgerPage() {
                       <TableCell>
                         <div className="space-y-1">
                           <div className="flex items-center gap-1.5 font-medium text-xs text-neutral-900 dark:text-neutral-100">
-                            <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
+                            <FileText className="h-3.5 w-3.5 text-neutral-500 dark:text-neutral-400 shrink-0" />
                             <span className="truncate max-w-[200px]">
                               {firstItem?.originalFilename || "Document"}
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-1 text-[10px]">
-                            <Badge variant="secondary" className="px-1.5 py-0 rounded-md font-normal">
+                            <Badge variant="secondary" className="px-1.5 py-0 rounded-md font-normal text-neutral-700 dark:text-neutral-300">
                               {firstItem?.pageCount || 1} pgs
                             </Badge>
-                            <Badge variant="outline" className="px-1.5 py-0 rounded-md font-normal">
+                            <Badge variant="outline" className="px-1.5 py-0 rounded-md font-normal text-neutral-700 dark:text-neutral-300">
                               {firstItem?.colorMode === "COLOR" ? "Color" : "B&W"}
                             </Badge>
                             {firstItem?.isDuplex && (
-                              <Badge variant="outline" className="px-1.5 py-0 rounded-md font-normal">
+                              <Badge variant="outline" className="px-1.5 py-0 rounded-md font-normal text-neutral-700 dark:text-neutral-300">
                                 Duplex
                               </Badge>
                             )}
                             {firstItem && firstItem.copies > 1 && (
-                              <Badge variant="outline" className="px-1.5 py-0 rounded-md font-normal">
+                              <Badge variant="outline" className="px-1.5 py-0 rounded-md font-normal text-neutral-700 dark:text-neutral-300">
                                 {firstItem.copies}x
                               </Badge>
                             )}
@@ -488,23 +488,17 @@ export default function DashboardLedgerPage() {
                           variant="outline"
                           onClick={() => handleTogglePayment(job.id, job.paymentStatus)}
                           disabled={isUpdatingPayment}
-                          className={`h-7 px-2 text-[11px] font-medium rounded-md transition-colors ${
-                            job.paymentStatus === "PAID_CASH"
-                              ? "border-emerald-300 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400"
-                              : job.paymentStatus === "PAID_UPI"
-                              ? "border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-400"
-                              : "border-amber-300 text-amber-700 hover:bg-amber-50"
-                          }`}
+                          className="h-7 px-2 text-[11px] font-medium rounded-md border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                           title="Click to toggle Cash / UPI"
                         >
                           {job.paymentStatus === "PAID_CASH" ? (
                             <>
-                              <Banknote className="h-3 w-3 mr-1" />
+                              <Banknote className="h-3 w-3 mr-1 text-neutral-500 dark:text-neutral-400" />
                               Cash
                             </>
                           ) : job.paymentStatus === "PAID_UPI" ? (
                             <>
-                              <CreditCard className="h-3 w-3 mr-1" />
+                              <CreditCard className="h-3 w-3 mr-1 text-neutral-500 dark:text-neutral-400" />
                               UPI
                             </>
                           ) : (

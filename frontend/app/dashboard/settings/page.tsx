@@ -189,7 +189,7 @@ export default function DashboardSettingsPage() {
           <CardHeader className="pb-2.5">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                <Palette className="h-4 w-4 text-amber-500" />
+                <Palette className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                 <span>Color Printing</span>
               </CardTitle>
               <Switch checked={isColorEnabled} onCheckedChange={(val) => dispatch(setColorEnabled(val))} />
@@ -234,7 +234,7 @@ export default function DashboardSettingsPage() {
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
                 <Layers className="h-4 w-4 text-neutral-500" />
-                <Label className="text-sm font-medium">Double-sided printing</Label>
+                <Label className="text-sm font-medium">Double-Sided Printing</Label>
               </div>
               <p className="text-xs text-neutral-500">
                 Allow customers to choose double-sided prints.
@@ -253,7 +253,7 @@ export default function DashboardSettingsPage() {
           className="h-9 px-4 rounded-lg text-xs font-medium shadow-2xs"
         >
           <Save className="h-3.5 w-3.5 mr-1.5" />
-          {isSaving ? "Saving..." : "Save rate card"}
+          {isSaving ? "Saving..." : "Save Rate Card"}
         </Button>
       </div>
 

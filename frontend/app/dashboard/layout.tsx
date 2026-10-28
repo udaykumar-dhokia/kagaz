@@ -186,7 +186,7 @@ function DashboardSidebarNav({
               onClick={onLogout}
               tooltip="Sign Out"
               className={cn(
-                "text-xs font-medium rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/20",
+                "text-xs font-medium rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100",
                 isCollapsed
                   ? "h-8 w-8 p-0 flex items-center justify-center"
                   : "h-9 w-full px-2.5 flex items-center gap-2.5"
@@ -271,12 +271,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             >
               {isAudioMuted ? (
                 <>
-                  <BellOff className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
+                  <BellOff className="h-3.5 w-3.5 mr-1.5 text-neutral-500" />
                   Muted
                 </>
               ) : (
                 <>
-                  <Bell className="h-3.5 w-3.5 mr-1.5 text-emerald-500" />
+                  <Bell className="h-3.5 w-3.5 mr-1.5 text-neutral-500" />
                   Chimes On
                 </>
               )}
