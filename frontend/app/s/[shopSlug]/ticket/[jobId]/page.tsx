@@ -19,7 +19,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { KagazLogo } from "@/components/ui/logo";
 import { toast } from "sonner";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { loadShopCatalog } from "@/lib/store/slices/customerSlice";
 
 function TicketContent({
   paramsPromise,
@@ -27,11 +30,19 @@ function TicketContent({
   paramsPromise: Promise<{ shopSlug: string; jobId: string }>;
 }) {
   const { shopSlug, jobId } = use(paramsPromise);
+  const dispatch = useAppDispatch();
+  const shopData = useAppSelector((state) => state.customer.shopData);
 
   const [job, setJob] = useState<JobStatusResponse["data"] | null>(null);
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const hasTriggeredConfetti = useRef(false);
+
+  useEffect(() => {
+    if (!shopData && shopSlug) {
+      dispatch(loadShopCatalog(shopSlug));
+    }
+  }, [shopData, shopSlug, dispatch]);
 
   useEffect(() => {
     let isMounted = true;
@@ -115,27 +126,17 @@ function TicketContent({
 
   return (
     <div className="w-full max-w-md space-y-6">
-      {/* Top Notice */}
-      <div className="text-center space-y-1">
-        <Badge
-          variant="secondary"
-          className="px-2.5 py-0.5 text-xs font-normal rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-        >
-          <Sparkles className="h-3 w-3 mr-1 inline" />
-          Order registered
-        </Badge>
-        <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 pt-0.5">
-          Counter Pickup Ticket
+      {/* Top Shop Header - Only Shop Name */}
+      <div className="flex flex-col items-center text-center pt-2">
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+          {shopData?.shop.name || "Print Counter"}
         </h1>
-        <p className="text-xs text-neutral-500">
-          Share this pin at the counter to start printing.
-        </p>
       </div>
 
       {/* The Giant PIN Card */}
       <Card className="border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-2xs bg-white dark:bg-neutral-900 overflow-hidden text-center">
         <div className="bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 py-2 px-3 text-xs font-medium tracking-wide">
-          Pickup pin
+          Pickup PIN
         </div>
 
         <CardContent className="p-6 space-y-3">
@@ -152,7 +153,7 @@ function TicketContent({
               size="icon"
               className="h-8 w-8 rounded-lg shrink-0 border-neutral-200 dark:border-neutral-700"
             >
-              {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5 mr-1" />}
             </Button>
           </div>
 
@@ -160,7 +161,7 @@ function TicketContent({
 
           {/* Amount to pay */}
           <div className="flex items-center justify-between pt-0.5">
-            <span className="text-xs font-normal text-neutral-500">Amount to pay at counter:</span>
+            <span className="text-xs font-normal text-neutral-500">Amount to Pay at Counter:</span>
             <span className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
               ₹{job.totalAmount}
             </span>
@@ -172,11 +173,11 @@ function TicketContent({
       <Card className="border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 space-y-3.5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-neutral-500">
-            Live status
+            Live Status
           </span>
           {isCompleted ? (
             <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white text-xs rounded-md font-normal">
-              Printed & done
+              Printed & Done
             </Badge>
           ) : isPrinting ? (
             <Badge className="bg-blue-600 hover:bg-blue-600 text-white text-xs animate-pulse rounded-md font-normal">
@@ -184,7 +185,7 @@ function TicketContent({
             </Badge>
           ) : (
             <Badge variant="secondary" className="text-xs rounded-md font-normal">
-              In queue
+              In Queue
             </Badge>
           )}
         </div>
@@ -199,7 +200,7 @@ function TicketContent({
             }`}
           >
             <Clock className="h-4 w-4" />
-            <span>1. In queue</span>
+            <span>1. In Queue</span>
           </div>
 
           <div
@@ -230,7 +231,7 @@ function TicketContent({
           <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-800 dark:text-emerald-300 space-y-1 animate-in fade-in">
             <p className="font-semibold flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4" />
-              Your print is ready!
+              Your Print is Ready!
             </p>
             <p className="text-[11px] text-emerald-700 dark:text-emerald-400">
               Collect your pages from the counter. Your digital document has been permanently deleted from storage.
@@ -251,14 +252,20 @@ function TicketContent({
       >
         <Button variant="outline" className="w-full h-9 rounded-lg text-xs font-medium">
           <PlusCircle className="h-4 w-4 mr-1.5" />
-          Print another document
+          Print Another Document
         </Button>
       </Link>
 
       {/* Privacy Note */}
       <div className="flex items-center justify-center gap-2 text-xs text-neutral-400 pt-2 text-center">
         <ShieldCheck className="h-4 w-4 text-emerald-600" />
-        <span>Files automatically deleted within 60 minutes or upon completion.</span>
+        <span>Files automatically deleted within 60 minutes or upon completion</span>
+      </div>
+
+      {/* Powered by Kagaz with logo */}
+      <div className="pt-2 pb-4 flex items-center justify-center gap-1.5 text-neutral-500">
+        <span className="text-xs font-normal">powered by</span>
+        <KagazLogo className="h-4.5 w-auto" />
       </div>
     </div>
   );

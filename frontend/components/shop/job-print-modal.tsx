@@ -151,20 +151,20 @@ export function JobPrintModal({
         <DialogHeader className="space-y-1 pb-2 pr-8">
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="font-mono text-xs px-2 py-0.5 font-medium rounded-md">
-              Pin: {job.pickupPin}
+              PIN: {job.pickupPin}
             </Badge>
             <Badge
               variant={job.status === "PRINTING" ? "default" : "secondary"}
               className="text-xs font-normal rounded-md"
             >
-              {job.status === "PRINTING" ? "Printing" : "In queue"}
+              {job.status === "PRINTING" ? "Printing" : "In Queue"}
             </Badge>
           </div>
           <DialogTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 pt-1">
             Print Order Details
           </DialogTitle>
           <DialogDescription className="text-xs text-neutral-500">
-            {job.customerPhoneMasked ? `Customer: ${job.customerPhoneMasked}` : "Walk-in order"}
+            {job.customerPhoneMasked ? `Customer: ${job.customerPhoneMasked}` : "Walk-in Order"}
           </DialogDescription>
         </DialogHeader>
 
@@ -198,17 +198,17 @@ export function JobPrintModal({
                   }`}
                 >
                   <Palette className="h-3 w-3 mr-1 inline" />
-                  {it.colorMode === "COLOR" ? "Color" : "B&w"}
+                  {it.colorMode === "COLOR" ? "Color" : "B&W"}
                 </Badge>
 
                 <Badge variant="outline" className="rounded-md font-normal text-[11px]">
                   <Layers className="h-3 w-3 mr-1 inline" />
-                  {it.isDuplex ? "Double-sided" : "Single-sided"}
+                  {it.isDuplex ? "Double-Sided" : "Single-Sided"}
                 </Badge>
 
                 <Badge variant="outline" className="rounded-md font-normal text-[11px]">
                   <Copy className="h-3 w-3 mr-1 inline" />
-                  {it.copies} {it.copies > 1 ? "copies" : "copy"}
+                  {it.copies} {it.copies > 1 ? "Copies" : "Copy"}
                 </Badge>
 
                 <Badge variant="outline" className="rounded-md font-normal text-[11px]">
@@ -248,7 +248,7 @@ export function JobPrintModal({
                 onClick={() => setPaymentChoice("PAID_UPI")}
                 className="h-8 text-xs px-3 font-medium rounded-lg"
               >
-                Upi
+                UPI
               </Button>
             </div>
           </div>

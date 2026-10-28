@@ -60,8 +60,8 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
       <Table>
         <TableHeader className="bg-neutral-50/70 dark:bg-neutral-950/40">
           <TableRow className="hover:bg-transparent">
-            <TableHead className="w-[120px] text-xs font-medium">Pin</TableHead>
-            <TableHead className="text-xs font-medium">Document & specs</TableHead>
+            <TableHead className="w-[120px] text-xs font-medium">PIN</TableHead>
+            <TableHead className="text-xs font-medium">Document & Specs</TableHead>
             <TableHead className="text-xs font-medium">Customer</TableHead>
             <TableHead className="text-xs font-medium text-right">Collect</TableHead>
             <TableHead className="w-[160px] text-xs font-medium text-right">Actions</TableHead>
@@ -116,7 +116,7 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                             : ""
                         }`}
                       >
-                        {firstItem?.colorMode === "COLOR" ? "Color" : "B&w"}
+                        {firstItem?.colorMode === "COLOR" ? "Color" : "B&W"}
                       </Badge>
 
                       <Badge variant="outline" className="px-1.5 py-0 text-[10px] rounded-md font-normal">
@@ -149,7 +149,7 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                     ₹{job.totalAmount}
                   </div>
                   <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-200 px-1 py-0 rounded-md font-normal">
-                    {job.paymentStatus === "PAID_UPI" ? "Upi" : "Cash"}
+                    {job.paymentStatus === "PAID_UPI" ? "UPI" : "Cash"}
                   </Badge>
                 </TableCell>
 

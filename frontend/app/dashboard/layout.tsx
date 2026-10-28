@@ -34,6 +34,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { KagazLogo, KagazMark } from "@/components/ui/logo";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { logout } from "@/lib/store/slices/authSlice";
@@ -53,25 +55,25 @@ function DashboardSidebarNav({
 
   const navItems = [
     {
-      title: "Live counter queue",
+      title: "Live Counter Queue",
       href: "/dashboard",
       icon: Printer,
       active: pathname === "/dashboard",
     },
     {
-      title: "Services & rates",
+      title: "Services & Rates",
       href: "/dashboard/settings",
       icon: SlidersHorizontal,
       active: pathname.startsWith("/dashboard/settings"),
     },
     {
-      title: "Counter standee qr",
+      title: "Counter Standee QR",
       href: "/dashboard/standee",
       icon: QrCode,
       active: pathname.startsWith("/dashboard/standee"),
     },
     {
-      title: "Daily ledger & reports",
+      title: "Daily Ledger & Reports",
       href: "/dashboard/ledger",
       icon: BarChart3,
       active: pathname.startsWith("/dashboard/ledger"),
@@ -81,54 +83,65 @@ function DashboardSidebarNav({
   return (
     <Sidebar collapsible="icon" className="border-r border-neutral-200 dark:border-neutral-800">
       {/* Sidebar Header */}
-      <SidebarHeader className="border-b border-neutral-200 dark:border-neutral-800 p-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold shadow-2xs">
-            <Printer className="h-4.5 w-4.5" />
+      <SidebarHeader
+        className={cn(
+          "h-14 border-b border-neutral-200 dark:border-neutral-800",
+          isCollapsed
+            ? "p-0 flex items-center justify-center"
+            : "px-3 flex flex-row items-center gap-2.5"
+        )}
+      >
+        {isCollapsed ? (
+          <div className="flex items-center justify-center">
+            <KagazMark className="h-7 w-7" />
           </div>
-          {!isCollapsed && (
-            <div className="overflow-hidden group-data-[collapsible=icon]:hidden">
-              <h3 className="font-semibold text-xs tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
-                {shopData?.name || "Kagaz counter"}
-              </h3>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[11px] text-neutral-500 font-medium">Terminal online</span>
-              </div>
-            </div>
-          )}
-        </div>
+        ) : (
+          <div className="flex items-center gap-2.5 overflow-hidden min-w-0 flex-1">
+            <KagazMark className="h-7 w-7 shrink-0" />
+            <h3 className="font-semibold text-sm tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
+              {shopData?.name || "Kagaz Counter"}
+            </h3>
+          </div>
+        )}
       </SidebarHeader>
 
       {/* Sidebar Navigation */}
-      <SidebarContent className="p-2">
-        <SidebarGroup>
+      <SidebarContent
+        className={cn(
+          "flex flex-col",
+          isCollapsed ? "py-2.5 px-0 items-center gap-1" : "p-2 gap-1"
+        )}
+      >
+        <SidebarGroup className={cn("w-full", isCollapsed ? "p-0 items-center" : "p-0")}>
           {!isCollapsed && (
-            <SidebarGroupLabel className="text-[11px] font-medium text-neutral-400 tracking-wider px-2 mb-1 group-data-[collapsible=icon]:hidden">
-              Counter operations
+            <SidebarGroupLabel className="text-[11px] font-medium text-neutral-400 tracking-wider px-2.5 mb-1">
+              Counter Operations
             </SidebarGroupLabel>
           )}
-          <SidebarMenu>
+          <SidebarMenu className={cn("w-full flex flex-col gap-1", isCollapsed ? "items-center" : "")}>
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
-                <SidebarMenuItem key={item.href}>
+                <SidebarMenuItem
+                  key={item.href}
+                  className={cn("w-full", isCollapsed ? "flex justify-center" : "")}
+                >
                   <SidebarMenuButton
                     render={<Link href={item.href} />}
                     isActive={item.active}
                     tooltip={item.title}
-                    className={`h-9 text-xs font-medium rounded-lg transition-colors ${
+                    className={cn(
+                      "text-xs font-medium rounded-lg transition-colors",
+                      isCollapsed
+                        ? "h-8 w-8 p-0 flex items-center justify-center"
+                        : "h-9 w-full px-2.5 flex items-center gap-2.5",
                       item.active
                         ? "bg-primary/10 text-primary hover:bg-primary/15"
                         : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900"
-                    }`}
+                    )}
                   >
                     <Icon className="h-4 w-4 shrink-0" />
-                    {!isCollapsed && (
-                      <span className="group-data-[collapsible=icon]:hidden truncate">
-                        {item.title}
-                      </span>
-                    )}
+                    {!isCollapsed && <span className="truncate">{item.title}</span>}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );
@@ -138,36 +151,49 @@ function DashboardSidebarNav({
       </SidebarContent>
 
       {/* Sidebar Footer */}
-      <SidebarFooter className="border-t border-neutral-200 dark:border-neutral-800 p-2 overflow-hidden">
-        <SidebarMenu>
+      <SidebarFooter
+        className={cn(
+          "border-t border-neutral-200 dark:border-neutral-800 overflow-hidden",
+          isCollapsed ? "py-2.5 px-0 flex flex-col items-center gap-1" : "p-2"
+        )}
+      >
+        <SidebarMenu className={cn("w-full flex flex-col gap-1", isCollapsed ? "items-center" : "")}>
           {shopData?.slug && (
-            <SidebarMenuItem>
+            <SidebarMenuItem className={cn("w-full", isCollapsed ? "flex justify-center" : "")}>
               <SidebarMenuButton
                 render={<Link href={`/s/${shopData.slug}`} target="_blank" />}
-                tooltip="Customer portal"
-                className="h-9 text-xs font-medium text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-900 rounded-lg"
+                tooltip="Customer Portal"
+                className={cn(
+                  "text-xs font-medium rounded-lg text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-900",
+                  isCollapsed
+                    ? "h-8 w-8 p-0 flex items-center justify-center"
+                    : "h-9 w-full px-2.5 flex items-center gap-2.5"
+                )}
               >
                 <Store className="h-4 w-4 shrink-0" />
                 {!isCollapsed && (
                   <>
-                    <span className="truncate group-data-[collapsible=icon]:hidden">Customer portal</span>
-                    <ExternalLink className="h-3 w-3 ml-auto text-neutral-400 group-data-[collapsible=icon]:hidden" />
+                    <span className="truncate">Customer Portal</span>
+                    <ExternalLink className="h-3 w-3 ml-auto text-neutral-400" />
                   </>
                 )}
               </SidebarMenuButton>
             </SidebarMenuItem>
           )}
 
-          <SidebarMenuItem>
+          <SidebarMenuItem className={cn("w-full", isCollapsed ? "flex justify-center" : "")}>
             <SidebarMenuButton
               onClick={onLogout}
-              tooltip="Sign out"
-              className="h-9 text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/20 rounded-lg"
+              tooltip="Sign Out"
+              className={cn(
+                "text-xs font-medium rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/20",
+                isCollapsed
+                  ? "h-8 w-8 p-0 flex items-center justify-center"
+                  : "h-9 w-full px-2.5 flex items-center gap-2.5"
+              )}
             >
               <LogOut className="h-4 w-4 shrink-0" />
-              {!isCollapsed && (
-                <span className="truncate group-data-[collapsible=icon]:hidden">Sign out</span>
-              )}
+              {!isCollapsed && <span className="truncate">Sign Out</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -251,7 +277,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               ) : (
                 <>
                   <Bell className="h-3.5 w-3.5 mr-1.5 text-emerald-500" />
-                  Chimes on
+                  Chimes On
                 </>
               )}
             </Button>

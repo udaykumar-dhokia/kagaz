@@ -8,6 +8,7 @@ import { fetchShopCatalog, type ShopCatalogResponse, type CreateOrderResponse } 
 import { PrintConfigurator } from "@/components/customer/print-configurator";
 import type { UploadedDocument } from "@/components/customer/file-dropzone";
 import { Button } from "@/components/ui/button";
+import { KagazLogo } from "@/components/ui/logo";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
@@ -77,7 +78,7 @@ function OptionsContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: 
             Back
           </Button>
         </Link>
-        <span className="text-xs font-medium text-neutral-500 truncate max-w-[200px]">
+        <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 truncate max-w-[200px]">
           {shopData.shop.name}
         </span>
       </div>
@@ -87,7 +88,7 @@ function OptionsContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: 
           Print Specifications
         </h1>
         <p className="text-xs text-neutral-500">
-          Customize pages, color, and copies.
+          Customize pages, color, and copies
         </p>
       </div>
 
@@ -98,6 +99,12 @@ function OptionsContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: 
         catalog={shopData.catalog}
         onOrderCreated={handleOrderCreated}
       />
+
+      {/* Powered by Kagaz with logo */}
+      <div className="pt-2 pb-4 flex items-center justify-center gap-1.5 text-neutral-500">
+        <span className="text-xs font-normal">powered by</span>
+        <KagazLogo className="h-4.5 w-auto" />
+      </div>
     </div>
   );
 }

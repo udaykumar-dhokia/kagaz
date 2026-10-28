@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { KagazLogo } from "@/components/ui/logo";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { loginShopkeeper } from "@/lib/store/slices/authSlice";
@@ -41,10 +42,7 @@ export default function ShopLoginPage() {
       <div className="w-full max-w-sm space-y-6">
         {/* Brand */}
         <div className="flex flex-col items-center text-center space-y-2">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm">
-            <Printer className="h-6 w-6" />
-          </div>
-          <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">Kagaz Counter Terminal</h1>
+          <KagazLogo className="h-9 w-auto" />
           <p className="text-xs text-neutral-500">
             Sign in to access your shop's real-time counter queue
           </p>
@@ -53,7 +51,7 @@ export default function ShopLoginPage() {
         {/* Login Card */}
         <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs rounded-xl">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-base font-semibold">Shopkeeper sign in</CardTitle>
+            <CardTitle className="text-base font-semibold">Shopkeeper Sign In</CardTitle>
             <CardDescription className="text-xs">
               Enter your shop credentials to open the counter queue
             </CardDescription>
@@ -62,7 +60,7 @@ export default function ShopLoginPage() {
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium">Email address</Label>
+                <Label className="text-xs font-medium">Email Address</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 h-4 w-4 text-neutral-400" />
                   <Input
@@ -98,7 +96,7 @@ export default function ShopLoginPage() {
                 disabled={isLoading}
                 className="w-full h-10 rounded-lg text-xs font-medium shadow-2xs mt-2"
               >
-                {isLoading ? "Signing in..." : "Open counter terminal"}
+                {isLoading ? "Signing In..." : "Open Counter Terminal"}
                 <ArrowRight className="h-4 w-4 ml-1.5" />
               </Button>
             </form>

@@ -5,6 +5,7 @@ import { QrCode, Printer, Download, Sparkles, ShieldCheck, Store, Copy, Check } 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { KagazLogo } from "@/components/ui/logo";
 import { toast } from "sonner";
 import { fetchShopStandee } from "@/lib/api";
 
@@ -77,7 +78,7 @@ export default function DashboardStandeePage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 print:hidden">
         <div>
           <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-            Counter standee studio
+            Counter Standee Studio
           </h1>
           <p className="text-xs text-neutral-500">
             Print this counter standee for your counter.
@@ -92,7 +93,7 @@ export default function DashboardStandeePage() {
             className="text-xs font-medium h-9 px-3 rounded-lg"
           >
             <Download className="h-3.5 w-3.5 mr-1" />
-            Download png
+            Download PNG
           </Button>
 
           <Button
@@ -101,7 +102,7 @@ export default function DashboardStandeePage() {
             className="text-xs font-medium h-9 px-3 rounded-lg shadow-2xs"
           >
             <Printer className="h-3.5 w-3.5 mr-1" />
-            Print standee
+            Print Standee
           </Button>
         </div>
       </div>
@@ -112,18 +113,11 @@ export default function DashboardStandeePage() {
           id="print-standee-card"
           className="w-full max-w-md bg-white text-neutral-900 p-6 sm:p-8 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xs text-center space-y-5 print:border-none print:shadow-none print:m-0 print:p-6"
         >
-          {/* Header */}
-          <div className="space-y-1">
-            <div className="inline-flex items-center justify-center gap-1.5 px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-900 text-[11px] font-medium">
-              <Sparkles className="h-3 w-3 text-amber-500" />
-              Kagaz
-            </div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 pt-1">
+          {/* Header - Shop Name Only */}
+          <div className="pt-2">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-neutral-900">
               {shopName}
             </h2>
-            <p className="text-xs font-normal text-neutral-500">
-              Fast, private & direct printing
-            </p>
           </div>
 
           {/* QR Code in Center */}
@@ -131,7 +125,7 @@ export default function DashboardStandeePage() {
             {qrData?.dataUrl && (
               <img
                 src={qrData.dataUrl}
-                alt="Shop standee qr code"
+                alt="Shop standee QR code"
                 className="w-48 h-48 mx-auto object-contain"
               />
             )}
@@ -144,7 +138,7 @@ export default function DashboardStandeePage() {
                 1
               </span>
               <span className="text-xs font-medium text-neutral-800">
-                Scan this qr code with your phone camera
+                Scan this QR code with your phone camera
               </span>
             </div>
 
@@ -162,7 +156,7 @@ export default function DashboardStandeePage() {
                 3
               </span>
               <span className="text-xs font-medium text-neutral-800">
-                Share your 4-digit pin at the counter to print
+                Share your 4-digit PIN at the counter to print
               </span>
             </div>
           </div>
@@ -170,7 +164,13 @@ export default function DashboardStandeePage() {
           {/* Privacy Trust Seal */}
           <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 py-1.5 rounded-lg border border-emerald-200">
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>100% private • No whatsapp • Auto-deleted on print</span>
+            <span>100% Private • No WhatsApp • Auto-Deleted on Print</span>
+          </div>
+
+          {/* Powered by Kagaz with logo */}
+          <div className="pt-2 flex items-center justify-center gap-1.5 text-neutral-600">
+            <span className="text-xs font-normal">powered by</span>
+            <KagazLogo className="h-4.5 w-auto" />
           </div>
         </div>
       </div>
@@ -189,7 +189,7 @@ export default function DashboardStandeePage() {
             className="text-xs font-medium h-8 px-3 rounded-lg shrink-0"
           >
             {copied ? <Check className="h-3.5 w-3.5 mr-1 text-emerald-600" /> : <Copy className="h-3.5 w-3.5 mr-1" />}
-            {copied ? "Copied" : "Copy link"}
+            {copied ? "Copied" : "Copy Link"}
           </Button>
         </CardContent>
       </Card>

@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState, use, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, Sparkles, ArrowRight, Store, Clock, ExternalLink, X } from "lucide-react";
-import { fetchShopCatalog, fetchJobStatus, type ShopCatalogResponse } from "@/lib/api";
+import { ShieldCheck, ArrowRight, Store, Clock, ExternalLink, X } from "lucide-react";
+import { fetchJobStatus } from "@/lib/api";
 import { FileDropzone, type UploadedDocument } from "@/components/customer/file-dropzone";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { KagazLogo } from "@/components/ui/logo";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   loadShopCatalog,
@@ -16,13 +17,6 @@ import {
   clearPendingDoc,
   setActiveRecoveryJob,
 } from "@/lib/store/slices/customerSlice";
-
-interface ActiveRecoveryJob {
-  id: string;
-  pickupPin: string;
-  totalAmount: string;
-  status: string;
-}
 
 function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: string }> }) {
   const { shopSlug } = use(paramsPromise);
@@ -143,23 +137,11 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
 
   return (
     <div className="w-full max-w-lg space-y-6">
-      {/* Top Branding & Shop Header */}
-      <div className="flex flex-col items-center text-center space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-900 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          <span>Kagaz instant print</span>
-        </div>
-
+      {/* Top Shop Header - Only Shop Name */}
+      <div className="flex flex-col items-center text-center pt-2">
         <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
           {shop.name}
         </h1>
-
-        <div className="flex items-center gap-2">
-          <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
-            Counter active • Ready to print
-          </span>
-        </div>
       </div>
 
       {/* ACTIVE TICKET RECOVERY BANNER */}
@@ -173,10 +155,10 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
               <div>
                 <div className="flex items-center gap-2">
                   <h4 className="font-medium text-sm text-neutral-900 dark:text-neutral-50">
-                    Active job pin: {activeRecoveryJob.pickupPin}
+                    Active Job PIN: {activeRecoveryJob.pickupPin}
                   </h4>
                   <Badge variant="secondary" className="text-[10px] px-1.5 py-0 rounded-md font-normal">
-                    {activeRecoveryJob.status === "PRINTING" ? "Printing now" : "In queue"}
+                    {activeRecoveryJob.status === "PRINTING" ? "Printing Now" : "In Queue"}
                   </Badge>
                 </div>
                 <p className="text-xs text-neutral-600 dark:text-neutral-300 mt-0.5">
@@ -202,7 +184,7 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
               onClick={handleGoToTicket}
               className="flex-1 h-9 rounded-lg text-xs font-medium shadow-2xs"
             >
-              <span>View ticket</span>
+              <span>View Ticket</span>
               <ExternalLink className="h-3.5 w-3.5 ml-1.5" />
             </Button>
             <Button
@@ -211,7 +193,7 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
               onClick={handleDismissRecovery}
               className="h-9 rounded-lg text-xs font-medium"
             >
-              Start new print
+              Start New Print
             </Button>
           </div>
         </Card>
@@ -221,12 +203,12 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
       <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs bg-white dark:bg-neutral-900 rounded-xl">
         <CardContent className="p-3 sm:p-4">
           <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-2">
-            Available at this shop:
+            Available Services & Rates:
           </p>
           <div className="flex flex-wrap gap-1.5 text-xs">
             {catalog.isBwEnabled && (
               <Badge variant="secondary" className="font-normal rounded-md">
-                B&w: ₹{catalog.bwSinglePrice}/pg
+                B&W: ₹{catalog.bwSinglePrice}/pg
               </Badge>
             )}
             {catalog.isColorEnabled && (
@@ -268,29 +250,35 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
             onClick={handleProceedToOptions}
             className="w-full h-10 rounded-lg text-xs font-medium shadow-2xs flex items-center justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-200"
           >
-            <span>Choose print settings</span>
+            <span>Choose Print Settings</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
         )}
       </div>
 
-      <Separator className="my-6 bg-neutral-200 dark:bg-neutral-800" />
+      <Separator className="my-6 bg-neutral-200 dark:border-neutral-800" />
 
       {/* Security & Privacy Banner */}
       <Card className="border border-neutral-200/60 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-950/40 p-4 rounded-xl">
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-xs font-medium text-neutral-800 dark:text-neutral-200">
             <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-            <span>Kagaz privacy guarantee</span>
+            <span>Kagaz Privacy Guarantee</span>
           </div>
 
           <ul className="text-xs text-neutral-500 dark:text-neutral-400 space-y-1.5 list-disc list-inside">
-            <li>No need to share your personal whatsapp or phone number.</li>
+            <li>No need to share personal WhatsApp or phone number.</li>
             <li>Document streams directly to the counter printer.</li>
             <li>Files are automatically shredded and deleted immediately upon printing.</li>
           </ul>
         </div>
       </Card>
+
+      {/* Powered by Kagaz with logo */}
+      <div className="pt-2 pb-4 flex items-center justify-center gap-1.5 text-neutral-500">
+        <span className="text-xs font-normal">powered by</span>
+        <KagazLogo className="h-4.5 w-auto" />
+      </div>
     </div>
   );
 }

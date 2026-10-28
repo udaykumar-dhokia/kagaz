@@ -54,7 +54,7 @@ export default function DashboardLedgerPage() {
     if (toggleJobPayment.fulfilled.match(result)) {
       toast.success(
         `Payment updated to ${
-          result.payload.newStatus === "PAID_CASH" ? "Cash" : "Upi"
+          result.payload.newStatus === "PAID_CASH" ? "Cash" : "UPI"
         }`
       );
     } else {
@@ -101,7 +101,7 @@ export default function DashboardLedgerPage() {
         <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
             <span className="text-[11px] font-medium text-neutral-500">
-              Today's revenue
+              Today's Revenue
             </span>
             <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               ₹{ledgerData?.totalRevenue.toFixed(2) || "0.00"}
@@ -129,7 +129,7 @@ export default function DashboardLedgerPage() {
         <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
             <span className="text-[11px] font-medium text-blue-600 flex items-center gap-1">
-              <CreditCard className="h-3.5 w-3.5" /> Upi
+              <CreditCard className="h-3.5 w-3.5" /> UPI
             </span>
             <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               ₹{ledgerData?.upiCollected.toFixed(2) || "0.00"}
@@ -142,13 +142,13 @@ export default function DashboardLedgerPage() {
         <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
             <span className="text-[11px] font-medium text-neutral-500">
-              Pages printed
+              Pages Printed
             </span>
             <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               {ledgerData?.totalPagesPrinted || 0}
             </div>
             <p className="text-[11px] text-neutral-400">
-              {ledgerData?.bwPagesPrinted || 0} B&w • {ledgerData?.colorPagesPrinted || 0} Color
+              {ledgerData?.bwPagesPrinted || 0} B&W • {ledgerData?.colorPagesPrinted || 0} Color
             </p>
           </CardContent>
         </Card>
@@ -174,8 +174,8 @@ export default function DashboardLedgerPage() {
             <Table>
               <TableHeader className="bg-neutral-50/70 dark:bg-neutral-950/40">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[100px] text-xs font-medium">Pin</TableHead>
-                  <TableHead className="text-xs font-medium">Completed at</TableHead>
+                  <TableHead className="w-[100px] text-xs font-medium">PIN</TableHead>
+                  <TableHead className="text-xs font-medium">Completed At</TableHead>
                   <TableHead className="text-xs font-medium">Customer</TableHead>
                   <TableHead className="text-xs font-medium text-right">Amount</TableHead>
                   <TableHead className="w-[140px] text-xs font-medium text-right">Payment</TableHead>

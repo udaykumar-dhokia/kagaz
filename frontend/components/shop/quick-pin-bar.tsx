@@ -50,7 +50,7 @@ export function QuickPinBar({ onSearchPin, isLoading }: QuickPinBarProps) {
           inputMode="numeric"
           pattern="[0-9]*"
           maxLength={4}
-          placeholder="Enter 4-digit pin or scan qr..."
+          placeholder="Enter 4-digit PIN or scan QR..."
           value={pin}
           onChange={handleInputChange}
           className="h-11 pl-10 pr-24 text-base font-mono font-medium tracking-wider rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary/20 transition-all placeholder:font-sans placeholder:text-xs placeholder:font-normal placeholder:tracking-normal"

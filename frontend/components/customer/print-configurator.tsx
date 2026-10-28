@@ -203,7 +203,7 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
               </Label>
               {!catalog.isColorEnabled && (
                 <Badge variant="outline" className="text-[10px] text-neutral-400">
-                  Shop is b&w only
+                  Shop is B&W only
                 </Badge>
               )}
             </div>
@@ -271,7 +271,7 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
           <div className="flex items-center justify-between">
             <Label className="text-sm font-semibold flex items-center gap-2">
               <Copy className="h-4 w-4 text-neutral-500" />
-              Number of copies
+              Number of Copies
             </Label>
 
             <div className="flex items-center gap-2">
@@ -300,7 +300,7 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
 
         {/* 4. Page Range Selection */}
         <Card className="border border-neutral-200/80 dark:border-neutral-800 p-4 space-y-3 rounded-xl">
-          <Label className="text-sm font-semibold">Pages to print</Label>
+          <Label className="text-sm font-semibold">Pages to Print</Label>
 
           <div className="grid grid-cols-2 gap-2">
             <Button
@@ -310,7 +310,7 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
               onClick={() => setPageSelection("all")}
               className="h-9 rounded-lg text-xs font-medium"
             >
-              All pages ({doc.pageCount})
+              All Pages ({doc.pageCount})
             </Button>
             <Button
               type="button"
@@ -319,7 +319,7 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
               onClick={() => setPageSelection("custom")}
               className="h-9 rounded-lg text-xs font-medium"
             >
-              Custom range
+              Custom Range
             </Button>
           </div>
 
@@ -436,10 +436,10 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
           className="w-full h-10 rounded-lg text-sm font-medium shadow-2xs flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
-            <span>Generating pin...</span>
+            <span>Generating PIN...</span>
           ) : (
             <>
-              <span>Get 4-digit pickup pin</span>
+              <span>Get 4-Digit Pickup PIN</span>
               <ArrowRight className="h-4 w-4" />
             </>
           )}
