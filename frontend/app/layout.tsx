@@ -3,6 +3,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { StoreProvider } from "@/lib/store/provider";
 
 export const metadata: Metadata = {
   title: "Kagaz | Fast, Private & Direct Xerox & Print Platform",
@@ -17,10 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("h-full", "antialiased", "font-sans")}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <TooltipProvider>
-          {children}
-          <Toaster position="top-center" richColors />
-        </TooltipProvider>
+        <StoreProvider>
+          <TooltipProvider>
+            {children}
+            <Toaster position="top-center" richColors />
+          </TooltipProvider>
+        </StoreProvider>
       </body>
     </html>
   );

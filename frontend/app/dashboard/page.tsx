@@ -1,68 +1,58 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
-import {
-  Printer,
-  Sparkles,
-  RefreshCw,
-  Clock,
-  Layers,
-  Inbox,
-  AlertCircle,
-  Volume2,
-} from "lucide-react";
+import React, { useEffect, useCallback } from "react";
+import { RefreshCw } from "lucide-react";
 import { QuickPinBar } from "@/components/shop/quick-pin-bar";
 import { QueueTable } from "@/components/shop/queue-table";
 import { JobPrintModal } from "@/components/shop/job-print-modal";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { fetchShopQueue, verifyQueuePin, completeQueueJob, type QueueJob } from "@/lib/api";
 import { useShopSocket } from "@/hooks/use-socket";
 import { useAudioChime } from "@/hooks/use-sound";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import {
+  fetchQueue,
+  searchQueuePin,
+  completeJob,
+  openJobModal,
+  closeJobModal,
+  onJobStatusUpdated,
+  onJobCompleted,
+  onJobCancelled,
+} from "@/lib/store/slices/queueSlice";
 
 export default function DashboardQueuePage() {
-  const [token, setToken] = useState<string | null>(null);
-  const [jobs, setJobs] = useState<QueueJob[]>([]);
-  const [selectedJob, setSelectedJob] = useState<QueueJob | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSearchingPin, setIsSearchingPin] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const token = useAppSelector((state) => state.auth.token);
+  const {
+    jobs,
+    selectedJob,
+    isModalOpen,
+    isLoading,
+    isSearchingPin,
+    isAudioMuted,
+  } = useAppSelector((state) => state.queue);
 
   const { playChime } = useAudioChime();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("kagaz_shop_token");
-      setToken(storedToken);
-    }
-  }, []);
-
-  // Fetch current queue
-  const loadQueue = useCallback(async () => {
-    if (!token) return;
-    try {
-      const res = await fetchShopQueue(token);
-      setJobs(res.data);
-    } catch (err: any) {
-      console.warn("Queue fetch error:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
+  const loadQueue = useCallback(() => {
     if (token) {
-      loadQueue();
+      dispatch(fetchQueue(token));
     }
-  }, [token, loadQueue]);
+  }, [token, dispatch]);
+
+  useEffect(() => {
+    loadQueue();
+  }, [loadQueue]);
 
   // Real-time WebSocket connection
   const { isConnected } = useShopSocket(token, {
     onJobCreated: (data) => {
-      // Play audio chime
-      playChime();
+      if (!isAudioMuted) {
+        playChime();
+      }
 
       toast.info(`🔔 New print order: Pin ${data.pickupPin} (₹${data.totalAmount})`, {
         duration: 5000,
@@ -73,54 +63,36 @@ export default function DashboardQueuePage() {
     },
 
     onJobStatusUpdated: (data) => {
-      setJobs((prev) =>
-        prev.map((j) => (j.id === data.jobId ? { ...j, status: data.status } : j))
-      );
+      dispatch(onJobStatusUpdated(data));
     },
 
     onJobCompleted: (data) => {
-      setJobs((prev) => prev.filter((j) => j.id !== data.jobId));
+      dispatch(onJobCompleted(data.jobId));
     },
 
     onJobCancelled: (data) => {
-      setJobs((prev) => prev.filter((j) => j.id !== data.jobId));
+      dispatch(onJobCancelled(data.jobId));
     },
   });
 
-  // Fast keyboard PIN search
   const handleSearchPin = async (pin: string) => {
     if (!token) return;
-    setIsSearchingPin(true);
-
-    try {
-      const res = await verifyQueuePin(token, pin);
-      const verifiedJob: QueueJob = {
-        ...res.data.job,
-        items: res.data.items,
-      };
-
-      setSelectedJob(verifiedJob);
-      setIsModalOpen(true);
-    } catch (err: any) {
-      toast.error(err.message || `No active job found for pin "${pin}"`);
-    } finally {
-      setIsSearchingPin(false);
+    const result = await dispatch(searchQueuePin({ token, pin }));
+    if (searchQueuePin.rejected.match(result)) {
+      toast.error(result.payload as string);
     }
   };
 
   const handleQuickComplete = async (jobId: string) => {
     if (!token) return;
-    try {
-      await completeQueueJob(token, jobId, "PAID_CASH");
+    const result = await dispatch(
+      completeJob({ token, jobId, paymentStatus: "PAID_CASH" })
+    );
+    if (completeJob.fulfilled.match(result)) {
       toast.success("Job marked done and document shredded.");
-      setJobs((prev) => prev.filter((j) => j.id !== jobId));
-    } catch (err: any) {
-      toast.error(err.message || "Failed to complete job");
+    } else {
+      toast.error(result.payload as string);
     }
-  };
-
-  const handleJobCompleted = (jobId: string) => {
-    setJobs((prev) => prev.filter((j) => j.id !== jobId));
   };
 
   return (
@@ -180,7 +152,7 @@ export default function DashboardQueuePage() {
           </div>
         </div>
 
-        {isLoading ? (
+        {isLoading && jobs.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center">
             <div className="h-8 w-8 border-4 border-neutral-300 border-t-primary rounded-full animate-spin mb-2" />
             <p className="text-xs text-neutral-500">Loading counter queue...</p>
@@ -188,10 +160,7 @@ export default function DashboardQueuePage() {
         ) : (
           <QueueTable
             jobs={jobs}
-            onSelectJob={(job) => {
-              setSelectedJob(job);
-              setIsModalOpen(true);
-            }}
+            onSelectJob={(job) => dispatch(openJobModal(job))}
             onQuickComplete={handleQuickComplete}
           />
         )}
@@ -202,8 +171,8 @@ export default function DashboardQueuePage() {
         <JobPrintModal
           job={selectedJob}
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onJobCompleted={handleJobCompleted}
+          onClose={() => dispatch(closeJobModal())}
+          onJobCompleted={(jobId) => dispatch(onJobCompleted(jobId))}
           token={token}
         />
       )}

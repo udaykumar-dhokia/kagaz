@@ -26,62 +26,39 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import {
-  fetchDailyLedger,
-  fetchLedgerHistory,
-  updateLedgerPayment,
-  type DailyLedgerResponse,
-  type LedgerHistoryResponse,
-} from "@/lib/api";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { fetchLedgerStats, toggleJobPayment } from "@/lib/store/slices/catalogSlice";
 
 export default function DashboardLedgerPage() {
-  const [token, setToken] = useState<string | null>(null);
-  const [ledgerData, setLedgerData] = useState<DailyLedgerResponse["data"]["summary"] | null>(null);
-  const [historyJobs, setHistoryJobs] = useState<LedgerHistoryResponse["data"]["jobs"]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+  const { ledgerData, historyJobs, isLoading } = useAppSelector(
+    (state) => state.catalog
+  );
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("kagaz_shop_token");
-    setToken(storedToken);
-
-    if (storedToken) {
-      loadData(storedToken);
+    if (token) {
+      dispatch(fetchLedgerStats(token));
     }
-  }, []);
+  }, [token, dispatch]);
 
-  const loadData = async (authToken: string) => {
-    setIsLoading(true);
-    try {
-      const [dailyRes, historyRes] = await Promise.all([
-        fetchDailyLedger(authToken),
-        fetchLedgerHistory(authToken, 50, 0),
-      ]);
-
-      setLedgerData(dailyRes.data.summary);
-      setHistoryJobs(historyRes.data.jobs);
-    } catch (err: any) {
-      console.error("Ledger fetch error:", err);
-      toast.error("Failed to load ledger data");
-    } finally {
-      setIsLoading(false);
-    }
+  const loadData = (authToken: string) => {
+    dispatch(fetchLedgerStats(authToken));
   };
 
   const handleTogglePayment = async (jobId: string, currentStatus: string) => {
     if (!token) return;
-    const newStatus = currentStatus === "PAID_CASH" ? "PAID_UPI" : "PAID_CASH";
-
-    try {
-      await updateLedgerPayment(token, jobId, newStatus);
-      setHistoryJobs((prev) =>
-        prev.map((j) => (j.id === jobId ? { ...j, paymentStatus: newStatus } : j))
+    const result = await dispatch(
+      toggleJobPayment({ token, jobId, currentStatus })
+    );
+    if (toggleJobPayment.fulfilled.match(result)) {
+      toast.success(
+        `Payment updated to ${
+          result.payload.newStatus === "PAID_CASH" ? "Cash" : "Upi"
+        }`
       );
-      toast.success(`Payment updated to ${newStatus === "PAID_CASH" ? "Cash" : "UPI"}`);
-      // Refresh daily metrics
-      const dailyRes = await fetchDailyLedger(token);
-      setLedgerData(dailyRes.data.summary);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to update payment");
+    } else {
+      toast.error(result.payload as string);
     }
   };
 

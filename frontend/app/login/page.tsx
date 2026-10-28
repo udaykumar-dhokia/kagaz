@@ -9,13 +9,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
-import { loginShop } from "@/lib/api";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { loginShopkeeper } from "@/lib/store/slices/authSlice";
 
 export default function ShopLoginPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.auth);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,20 +27,12 @@ export default function ShopLoginPage() {
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      const res = await loginShop({ email, password });
+    const result = await dispatch(loginShopkeeper({ email, password }));
+    if (loginShopkeeper.fulfilled.match(result)) {
       toast.success("Welcome back! Loading counter terminal...");
-
-      // Save token and shop data
-      localStorage.setItem("kagaz_shop_token", res.data.token);
-      localStorage.setItem("kagaz_shop_data", JSON.stringify(res.data.shop));
-
       router.push("/dashboard");
-    } catch (err: any) {
-      toast.error(err.message || "Invalid credentials");
-      setIsLoading(false);
+    } else {
+      toast.error(result.payload as string);
     }
   };
 
@@ -56,9 +51,9 @@ export default function ShopLoginPage() {
         </div>
 
         {/* Login Card */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-sm">
+        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs rounded-xl">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-base font-bold">Shopkeeper Sign In</CardTitle>
+            <CardTitle className="text-base font-semibold">Shopkeeper sign in</CardTitle>
             <CardDescription className="text-xs">
               Enter your shop credentials to open the counter queue
             </CardDescription>
@@ -67,7 +62,7 @@ export default function ShopLoginPage() {
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Email Address</Label>
+                <Label className="text-xs font-medium">Email address</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 h-4 w-4 text-neutral-400" />
                   <Input
@@ -76,14 +71,14 @@ export default function ShopLoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="pl-9 h-10 text-xs"
+                    className="pl-9 h-9 text-xs rounded-lg"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label className="text-xs font-semibold">Password</Label>
+                  <Label className="text-xs font-medium">Password</Label>
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-2.5 h-4 w-4 text-neutral-400" />
@@ -93,7 +88,7 @@ export default function ShopLoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="pl-9 h-10 text-xs"
+                    className="pl-9 h-9 text-xs rounded-lg"
                   />
                 </div>
               </div>
@@ -101,9 +96,9 @@ export default function ShopLoginPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-10 rounded-lg text-xs font-bold shadow-xs mt-2"
+                className="w-full h-10 rounded-lg text-xs font-medium shadow-2xs mt-2"
               >
-                {isLoading ? "Signing in..." : "Open Counter Terminal"}
+                {isLoading ? "Signing in..." : "Open counter terminal"}
                 <ArrowRight className="h-4 w-4 ml-1.5" />
               </Button>
             </form>
@@ -115,9 +110,9 @@ export default function ShopLoginPage() {
           New shopkeeper?{" "}
           <Link
             href="/register"
-            className="font-semibold text-neutral-900 dark:text-neutral-100 hover:underline"
+            className="font-medium text-neutral-900 dark:text-neutral-100 hover:underline"
           >
-            Register your Xerox shop
+            Register your counter shop
           </Link>
         </div>
       </div>

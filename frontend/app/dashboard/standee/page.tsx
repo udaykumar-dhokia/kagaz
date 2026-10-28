@@ -34,7 +34,7 @@ export default function DashboardStandeePage() {
         })
         .catch((err) => {
           console.error("Failed to load standee:", err);
-          toast.error("Failed to load QR standee");
+          toast.error("Failed to load standee");
         })
         .finally(() => {
           setIsLoading(false);
@@ -77,7 +77,7 @@ export default function DashboardStandeePage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 print:hidden">
         <div>
           <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-            Counter Standee Studio
+            Counter standee studio
           </h1>
           <p className="text-xs text-neutral-500">
             Print this counter standee for your counter.
@@ -89,16 +89,16 @@ export default function DashboardStandeePage() {
             variant="outline"
             size="sm"
             onClick={handleDownloadQrPng}
-            className="text-xs font-medium h-8 px-3 rounded-lg"
+            className="text-xs font-medium h-9 px-3 rounded-lg"
           >
             <Download className="h-3.5 w-3.5 mr-1" />
-            Download PNG
+            Download png
           </Button>
 
           <Button
             size="sm"
             onClick={handlePrintStandee}
-            className="text-xs font-medium h-8 px-3 rounded-lg shadow-2xs"
+            className="text-xs font-medium h-9 px-3 rounded-lg shadow-2xs"
           >
             <Printer className="h-3.5 w-3.5 mr-1" />
             Print standee
@@ -110,11 +110,11 @@ export default function DashboardStandeePage() {
       <div className="flex justify-center py-2">
         <div
           id="print-standee-card"
-          className="w-full max-w-md bg-white text-neutral-900 p-6 sm:p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm text-center space-y-5 print:border-none print:shadow-none print:m-0 print:p-6"
+          className="w-full max-w-md bg-white text-neutral-900 p-6 sm:p-8 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xs text-center space-y-5 print:border-none print:shadow-none print:m-0 print:p-6"
         >
           {/* Header */}
           <div className="space-y-1">
-            <div className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 text-neutral-900 text-[11px] font-medium">
+            <div className="inline-flex items-center justify-center gap-1.5 px-2.5 py-0.5 rounded-md bg-neutral-100 text-neutral-900 text-[11px] font-medium">
               <Sparkles className="h-3 w-3 text-amber-500" />
               Kagaz
             </div>
@@ -122,7 +122,7 @@ export default function DashboardStandeePage() {
               {shopName}
             </h2>
             <p className="text-xs font-normal text-neutral-500">
-              Fast, Private & Direct Printing
+              Fast, private & direct printing
             </p>
           </div>
 
@@ -131,7 +131,7 @@ export default function DashboardStandeePage() {
             {qrData?.dataUrl && (
               <img
                 src={qrData.dataUrl}
-                alt="Shop Standee QR Code"
+                alt="Shop standee qr code"
                 className="w-48 h-48 mx-auto object-contain"
               />
             )}
@@ -144,7 +144,7 @@ export default function DashboardStandeePage() {
                 1
               </span>
               <span className="text-xs font-medium text-neutral-800">
-                Scan this QR code with your phone camera
+                Scan this qr code with your phone camera
               </span>
             </div>
 
@@ -170,7 +170,7 @@ export default function DashboardStandeePage() {
           {/* Privacy Trust Seal */}
           <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 py-1.5 rounded-lg border border-emerald-200">
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>100% private • No WhatsApp • Auto-deleted on print</span>
+            <span>100% private • No whatsapp • Auto-deleted on print</span>
           </div>
         </div>
       </div>

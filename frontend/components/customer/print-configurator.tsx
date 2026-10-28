@@ -203,7 +203,7 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
               </Label>
               {!catalog.isColorEnabled && (
                 <Badge variant="outline" className="text-[10px] text-neutral-400">
-                  Shop is B&W only
+                  Shop is b&w only
                 </Badge>
               )}
             </div>
@@ -267,11 +267,11 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
         </Card>
 
         {/* 3. Copies Counter */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 p-4">
+        <Card className="border border-neutral-200/80 dark:border-neutral-800 p-4 rounded-xl">
           <div className="flex items-center justify-between">
             <Label className="text-sm font-semibold flex items-center gap-2">
               <Copy className="h-4 w-4 text-neutral-500" />
-              Number of Copies
+              Number of copies
             </Label>
 
             <div className="flex items-center gap-2">
@@ -284,7 +284,7 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
               >
                 <Minus className="h-3.5 w-3.5" />
               </Button>
-              <span className="font-bold text-base w-8 text-center">{copies}</span>
+              <span className="font-semibold text-base w-8 text-center">{copies}</span>
               <Button
                 variant="outline"
                 size="icon"
@@ -299,8 +299,8 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
         </Card>
 
         {/* 4. Page Range Selection */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 p-4 space-y-3">
-          <Label className="text-sm font-semibold">Pages to Print</Label>
+        <Card className="border border-neutral-200/80 dark:border-neutral-800 p-4 space-y-3 rounded-xl">
+          <Label className="text-sm font-semibold">Pages to print</Label>
 
           <div className="grid grid-cols-2 gap-2">
             <Button
@@ -308,18 +308,18 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
               variant={pageSelection === "all" ? "default" : "outline"}
               size="sm"
               onClick={() => setPageSelection("all")}
-              className="text-xs font-medium"
+              className="h-9 rounded-lg text-xs font-medium"
             >
-              All Pages ({doc.pageCount})
+              All pages ({doc.pageCount})
             </Button>
             <Button
               type="button"
               variant={pageSelection === "custom" ? "default" : "outline"}
               size="sm"
               onClick={() => setPageSelection("custom")}
-              className="text-xs font-medium"
+              className="h-9 rounded-lg text-xs font-medium"
             >
-              Custom Range
+              Custom range
             </Button>
           </div>
 

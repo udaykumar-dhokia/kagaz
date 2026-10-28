@@ -176,7 +176,7 @@ function TicketContent({
           </span>
           {isCompleted ? (
             <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white text-xs rounded-md font-normal">
-              Printed & Done
+              Printed & done
             </Badge>
           ) : isPrinting ? (
             <Badge className="bg-blue-600 hover:bg-blue-600 text-white text-xs animate-pulse rounded-md font-normal">
@@ -192,18 +192,18 @@ function TicketContent({
         {/* 3 Step Visual Progress */}
         <div className="grid grid-cols-3 gap-2 text-center text-[11px] pt-1">
           <div
-            className={`p-2.5 rounded-xl border flex flex-col items-center gap-1.5 transition-colors ${
+            className={`p-2.5 rounded-lg border flex flex-col items-center gap-1.5 transition-colors ${
               isQueued || isPrinting || isCompleted
                 ? "border-emerald-500/30 bg-emerald-50/50 text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-300 font-semibold"
                 : "border-neutral-200 text-neutral-400"
             }`}
           >
             <Clock className="h-4 w-4" />
-            <span>1. In Queue</span>
+            <span>1. In queue</span>
           </div>
 
           <div
-            className={`p-2.5 rounded-xl border flex flex-col items-center gap-1.5 transition-colors ${
+            className={`p-2.5 rounded-lg border flex flex-col items-center gap-1.5 transition-colors ${
               isPrinting || isCompleted
                 ? "border-blue-500/30 bg-blue-50/50 text-blue-800 dark:bg-blue-950/20 dark:text-blue-300 font-semibold"
                 : "border-neutral-200 text-neutral-400"
@@ -214,9 +214,9 @@ function TicketContent({
           </div>
 
           <div
-            className={`p-2.5 rounded-xl border flex flex-col items-center gap-1.5 transition-colors ${
+            className={`p-2.5 rounded-lg border flex flex-col items-center gap-1.5 transition-colors ${
               isCompleted
-                ? "border-emerald-500/40 bg-emerald-100/60 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-200 font-bold"
+                ? "border-emerald-500/40 bg-emerald-100/60 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-200 font-semibold"
                 : "border-neutral-200 text-neutral-400"
             }`}
           >

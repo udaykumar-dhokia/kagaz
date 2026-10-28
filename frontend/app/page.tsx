@@ -25,21 +25,21 @@ export default function HomePage() {
       <header className="border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold">
-              <Printer className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold shadow-2xs">
+              <Printer className="h-4.5 w-4.5" />
             </div>
-            <span className="font-semibold text-lg tracking-tight">Kagaz</span>
+            <span className="font-semibold text-base tracking-tight">Kagaz</span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Link href="/login">
-              <Button variant="ghost" size="sm" className="font-medium text-xs sm:text-sm">
-                Shopkeeper Login
+              <Button variant="ghost" size="sm" className="font-medium text-xs h-9 rounded-lg">
+                Shopkeeper login
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="sm" className="rounded-lg h-8 px-3.5 text-xs sm:text-sm font-medium">
-                Register Shop
+              <Button size="sm" className="rounded-lg h-9 px-3.5 text-xs font-medium shadow-2xs">
+                Register shop
               </Button>
             </Link>
           </div>
@@ -48,21 +48,21 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <main className="flex-1 max-w-5xl mx-auto px-4 py-12 sm:py-20 flex flex-col items-center text-center">
-        <Badge variant="secondary" className="mb-4 px-3 py-1 font-medium text-xs rounded-full">
-          ⚡ No WhatsApp • Zero PC Downloads • 100% Private
+        <Badge variant="secondary" className="mb-4 px-2.5 py-0.5 font-normal text-xs rounded-md">
+          No whatsapp • Zero downloads • 100% private
         </Badge>
 
         <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight max-w-2xl text-neutral-900 dark:text-neutral-50 leading-tight sm:leading-none">
-          Direct Xerox & Print Shop Platform
+          Direct xerox & print shop platform
         </h1>
 
-        <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl">
-          Scan the counter qr code, upload your documents to print, and tell your 4-digit pin. 
-          Files are permanently deleted immediately after printing.
+        <p className="mt-4 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-xl">
+          Scan the counter qr code, upload documents to print, and tell your 4-digit pin. 
+          Files are permanently shredded immediately after printing.
         </p>
 
         {/* Enter Shop Code Form */}
-        <Card className="mt-8 w-full max-w-md border-neutral-200 dark:border-neutral-800 shadow-sm p-4 rounded-xl">
+        <Card className="mt-8 w-full max-w-md border border-neutral-200 dark:border-neutral-800 shadow-2xs p-4 rounded-xl">
           <form onSubmit={handleGoToShop} className="space-y-3">
             <label className="block text-left text-xs font-medium text-neutral-700 dark:text-neutral-300">
               Have a shop code or link?
@@ -72,52 +72,52 @@ export default function HomePage() {
                 placeholder="e.g. sharma-xerox"
                 value={shopCode}
                 onChange={(e) => setShopCode(e.target.value)}
-                className="h-10 rounded-lg"
+                className="h-9 text-xs rounded-lg"
               />
-              <Button type="submit" className="h-10 px-4 rounded-lg font-medium shrink-0">
-                Go to shop <ArrowRight className="ml-1 h-4 w-4" />
+              <Button type="submit" className="h-9 px-4 rounded-lg text-xs font-medium shrink-0 shadow-2xs">
+                Go to shop <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Button>
             </div>
-            <p className="text-xs text-left text-neutral-400">
-              Tip: In real shops, customers simply scan the QR standee at the counter.
+            <p className="text-[11px] text-left text-neutral-400">
+              Tip: In real shops, customers simply scan the counter standee qr code.
             </p>
           </form>
         </Card>
 
         {/* 3 Pillars */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 w-full text-left">
-          <Card className="p-5 border-neutral-200/80 dark:border-neutral-800">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-14 w-full text-left">
+          <Card className="p-4 border border-neutral-200/80 dark:border-neutral-800 rounded-xl shadow-2xs">
             <CardContent className="p-0 space-y-2">
-              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <QrCode className="h-5 w-5" />
+              <div className="h-9 w-9 flex items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <QrCode className="h-4.5 w-4.5" />
               </div>
-              <h3 className="font-bold text-sm text-neutral-900 dark:text-neutral-100">1. Scan & Upload</h3>
+              <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">1. Scan & upload</h3>
               <p className="text-xs text-neutral-500 leading-relaxed">
-                No app installation required. Customers open mobile web, choose B&W or Color, and view exact rates before uploading.
+                No app installation required. Customers open mobile web, choose B&w or color, and view exact rates before uploading.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="p-5 border-neutral-200/80 dark:border-neutral-800">
+          <Card className="p-4 border border-neutral-200/80 dark:border-neutral-800 rounded-xl shadow-2xs">
             <CardContent className="p-0 space-y-2">
-              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600">
-                <Zap className="h-5 w-5" />
+              <div className="h-9 w-9 flex items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+                <Zap className="h-4.5 w-4.5" />
               </div>
-              <h3 className="font-bold text-sm text-neutral-900 dark:text-neutral-100">2. 4-Digit Pickup Pin</h3>
+              <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">2. 4-digit pickup pin</h3>
               <p className="text-xs text-neutral-500 leading-relaxed">
                 Customer shows a 4-digit pin. Shopkeeper types it on the counter PC and prints with 1 click. Zero folder searching.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="p-5 border-neutral-200/80 dark:border-neutral-800">
+          <Card className="p-4 border border-neutral-200/80 dark:border-neutral-800 rounded-xl shadow-2xs">
             <CardContent className="p-0 space-y-2">
-              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-blue-500/10 text-blue-600">
-                <ShieldCheck className="h-5 w-5" />
+              <div className="h-9 w-9 flex items-center justify-center rounded-lg bg-blue-500/10 text-blue-600">
+                <ShieldCheck className="h-4.5 w-4.5" />
               </div>
-              <h3 className="font-bold text-sm text-neutral-900 dark:text-neutral-100">3. Absolute Privacy</h3>
+              <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">3. Absolute privacy</h3>
               <p className="text-xs text-neutral-500 leading-relaxed">
-                No stranger sees phone numbers. Files never accumulate in the Windows Downloads folder and are permanently shredded on print completion.
+                No stranger sees phone numbers. Files never accumulate in downloads folder and are permanently shredded on print completion.
               </p>
             </CardContent>
           </Card>
@@ -126,7 +126,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="border-t border-neutral-200 dark:border-neutral-800 py-6 text-center text-xs text-neutral-400">
-        <p>© 2026 Kagaz Platform • Modern Print Shop Infrastructure</p>
+        <p>© 2026 Kagaz • Modern print shop infrastructure</p>
       </footer>
     </div>
   );

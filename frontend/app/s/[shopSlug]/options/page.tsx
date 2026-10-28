@@ -9,50 +9,52 @@ import { PrintConfigurator } from "@/components/customer/print-configurator";
 import type { UploadedDocument } from "@/components/customer/file-dropzone";
 import { Button } from "@/components/ui/button";
 
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import {
+  loadShopCatalog,
+  setPendingDoc,
+  clearPendingDoc,
+} from "@/lib/store/slices/customerSlice";
+
 function OptionsContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: string }> }) {
   const { shopSlug } = use(paramsPromise);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const [shopData, setShopData] = useState<ShopCatalogResponse["data"] | null>(null);
-  const [doc, setDoc] = useState<UploadedDocument | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { shopData, pendingDoc: doc, isLoading } = useAppSelector(
+    (state) => state.customer
+  );
 
   useEffect(() => {
-    // 1. Retrieve doc from session or local storage (resilient against refresh / tab close)
-    let storedDoc = sessionStorage.getItem(`kagaz_doc_${shopSlug}`);
-    if (!storedDoc) {
-      storedDoc = localStorage.getItem(`kagaz_pending_doc_${shopSlug}`);
+    // 1. If doc is not in Redux, check session or localStorage
+    if (!doc) {
+      let storedDoc = sessionStorage.getItem(`kagaz_doc_${shopSlug}`);
+      if (!storedDoc) {
+        storedDoc = localStorage.getItem(`kagaz_pending_doc_${shopSlug}`);
+      }
+
+      if (!storedDoc) {
+        router.replace(`/s/${shopSlug}`);
+        return;
+      }
+
+      try {
+        dispatch(setPendingDoc(JSON.parse(storedDoc)));
+      } catch {
+        router.replace(`/s/${shopSlug}`);
+        return;
+      }
     }
 
-    if (!storedDoc) {
-      router.replace(`/s/${shopSlug}`);
-      return;
+    // 2. Fetch catalog if not loaded yet
+    if (!shopData) {
+      dispatch(loadShopCatalog(shopSlug));
     }
-
-    try {
-      setDoc(JSON.parse(storedDoc));
-    } catch {
-      router.replace(`/s/${shopSlug}`);
-      return;
-    }
-
-    // 2. Fetch catalog
-    fetchShopCatalog(shopSlug)
-      .then((res) => {
-        setShopData(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching catalog:", err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [shopSlug, router]);
+  }, [shopSlug, router, doc, shopData, dispatch]);
 
   const handleOrderCreated = (orderData: CreateOrderResponse["data"]) => {
-    // Clear the uploaded doc from session storage to avoid accidental re-orders
+    dispatch(clearPendingDoc());
     sessionStorage.removeItem(`kagaz_doc_${shopSlug}`);
-    // Navigate to ticket screen
     router.push(`/s/${shopSlug}/ticket/${orderData.jobId}`);
   };
 

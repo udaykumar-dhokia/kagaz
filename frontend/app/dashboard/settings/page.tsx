@@ -20,95 +20,69 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
-  fetchShopMe,
-  updateShopCatalog,
-  addShopAddon,
-  deleteShopAddon,
-  fetchShopCatalog,
-} from "@/lib/api";
+  fetchCatalogSettings,
+  saveCatalogSettings,
+  createAddon,
+  removeAddon,
+  setBwEnabled,
+  setBwSinglePrice,
+  setBwDoublePrice,
+  setColorEnabled,
+  setColorSinglePrice,
+  setColorDoublePrice,
+  setDuplexEnabled,
+} from "@/lib/store/slices/catalogSlice";
 
 export default function DashboardSettingsPage() {
-  const [token, setToken] = useState<string | null>(null);
-  const [shopSlug, setShopSlug] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+  const {
+    isBwEnabled,
+    bwSinglePrice,
+    bwDoublePrice,
+    isColorEnabled,
+    colorSinglePrice,
+    colorDoublePrice,
+    isDuplexEnabled,
+    addons,
+    isLoading,
+    isSaving,
+  } = useAppSelector((state) => state.catalog);
 
-  // Settings State
-  const [isBwEnabled, setIsBwEnabled] = useState(true);
-  const [bwSinglePrice, setBwSinglePrice] = useState("2.00");
-  const [bwDoublePrice, setBwDoublePrice] = useState("1.50");
-
-  const [isColorEnabled, setIsColorEnabled] = useState(false);
-  const [colorSinglePrice, setColorSinglePrice] = useState("10.00");
-  const [colorDoublePrice, setColorDoublePrice] = useState("8.00");
-
-  const [isDuplexEnabled, setIsDuplexEnabled] = useState(true);
-
-  // Addons State
-  const [addons, setAddons] = useState<
-    { id: string; name: string; type: string; price: string }[]
-  >([]);
   const [newAddonName, setNewAddonName] = useState("");
   const [newAddonPrice, setNewAddonPrice] = useState("");
   const [isAddingAddon, setIsAddingAddon] = useState(false);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("kagaz_shop_token");
-    setToken(storedToken);
-
-    if (storedToken) {
-      fetchShopMe(storedToken)
-        .then((res) => {
-          const s = res.data.settings;
-          const shop = res.data.shop;
-          setShopSlug(shop.slug);
-
-          if (s) {
-            setIsBwEnabled(s.isBwEnabled);
-            setBwSinglePrice(s.bwSinglePrice);
-            setBwDoublePrice(s.bwDoublePrice);
-            setIsColorEnabled(s.isColorEnabled);
-            setColorSinglePrice(s.colorSinglePrice);
-            setColorDoublePrice(s.colorDoublePrice);
-            setIsDuplexEnabled(s.isDuplexEnabled);
-          }
-
-          // Fetch active addons from public catalog
-          return fetchShopCatalog(shop.slug);
-        })
-        .then((catRes) => {
-          setAddons(catRes.data.catalog.addons);
-        })
-        .catch((err) => {
-          console.error("Error loading settings:", err);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+    if (token) {
+      dispatch(fetchCatalogSettings(token));
     }
-  }, []);
+  }, [token, dispatch]);
 
   const handleSaveSettings = async () => {
     if (!token) return;
-    setIsSaving(true);
 
-    try {
-      await updateShopCatalog(token, {
-        isBwEnabled,
-        bwSinglePrice: parseFloat(bwSinglePrice) || 2.0,
-        bwDoublePrice: parseFloat(bwDoublePrice) || 1.5,
-        isColorEnabled,
-        colorSinglePrice: parseFloat(colorSinglePrice) || 10.0,
-        colorDoublePrice: parseFloat(colorDoublePrice) || 8.0,
-        isDuplexEnabled,
-      });
+    const result = await dispatch(
+      saveCatalogSettings({
+        token,
+        settings: {
+          isBwEnabled,
+          bwSinglePrice: parseFloat(bwSinglePrice) || 2.0,
+          bwDoublePrice: parseFloat(bwDoublePrice) || 1.5,
+          isColorEnabled,
+          colorSinglePrice: parseFloat(colorSinglePrice) || 10.0,
+          colorDoublePrice: parseFloat(colorDoublePrice) || 8.0,
+          isDuplexEnabled,
+        },
+      })
+    );
 
-      toast.success("Services and rates updated! Customer QR immediately updated.");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to update catalog");
-    } finally {
-      setIsSaving(false);
+    if (saveCatalogSettings.fulfilled.match(result)) {
+      toast.success("Services and rates updated! Customer rates immediately updated.");
+    } else {
+      toast.error(result.payload as string);
     }
   };
 
@@ -117,32 +91,32 @@ export default function DashboardSettingsPage() {
     if (!token || !newAddonName.trim() || !newAddonPrice) return;
 
     setIsAddingAddon(true);
-    try {
-      const res = await addShopAddon(token, {
+    const result = await dispatch(
+      createAddon({
+        token,
         name: newAddonName.trim(),
-        type: "CUSTOM",
         price: parseFloat(newAddonPrice),
-      });
+        type: "CUSTOM",
+      })
+    );
+    setIsAddingAddon(false);
 
-      setAddons((prev) => [...prev, res.data]);
+    if (createAddon.fulfilled.match(result)) {
       setNewAddonName("");
       setNewAddonPrice("");
-      toast.success(`Added "${res.data.name}" to catalog`);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to add service");
-    } finally {
-      setIsAddingAddon(false);
+      toast.success(`Added "${result.payload.name}" to catalog`);
+    } else {
+      toast.error(result.payload as string);
     }
   };
 
   const handleDeleteAddon = async (id: string, name: string) => {
     if (!token) return;
-    try {
-      await deleteShopAddon(token, id);
-      setAddons((prev) => prev.filter((a) => a.id !== id));
+    const result = await dispatch(removeAddon({ token, id }));
+    if (removeAddon.fulfilled.match(result)) {
       toast.info(`Removed "${name}" from catalog`);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to remove service");
+    } else {
+      toast.error(result.payload as string);
     }
   };
 
@@ -174,7 +148,7 @@ export default function DashboardSettingsPage() {
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <span>Black & White Printing</span>
               </CardTitle>
-              <Switch checked={isBwEnabled} onCheckedChange={setIsBwEnabled} />
+              <Switch checked={isBwEnabled} onCheckedChange={(val) => dispatch(setBwEnabled(val))} />
             </div>
             <CardDescription className="text-xs">
               Monochrome printing rates per sheet or side
@@ -189,7 +163,7 @@ export default function DashboardSettingsPage() {
                   type="number"
                   step="0.5"
                   value={bwSinglePrice}
-                  onChange={(e) => setBwSinglePrice(e.target.value)}
+                  onChange={(e) => dispatch(setBwSinglePrice(e.target.value))}
                   disabled={!isBwEnabled}
                   className="h-9 text-xs rounded-lg"
                 />
@@ -201,7 +175,7 @@ export default function DashboardSettingsPage() {
                   type="number"
                   step="0.5"
                   value={bwDoublePrice}
-                  onChange={(e) => setBwDoublePrice(e.target.value)}
+                  onChange={(e) => dispatch(setBwDoublePrice(e.target.value))}
                   disabled={!isBwEnabled}
                   className="h-9 text-xs rounded-lg"
                 />
@@ -218,7 +192,7 @@ export default function DashboardSettingsPage() {
                 <Palette className="h-4 w-4 text-amber-500" />
                 <span>Color Printing</span>
               </CardTitle>
-              <Switch checked={isColorEnabled} onCheckedChange={setIsColorEnabled} />
+              <Switch checked={isColorEnabled} onCheckedChange={(val) => dispatch(setColorEnabled(val))} />
             </div>
             <CardDescription className="text-xs">
               Enable or disable color printing options
@@ -233,7 +207,7 @@ export default function DashboardSettingsPage() {
                   type="number"
                   step="0.5"
                   value={colorSinglePrice}
-                  onChange={(e) => setColorSinglePrice(e.target.value)}
+                  onChange={(e) => dispatch(setColorSinglePrice(e.target.value))}
                   disabled={!isColorEnabled}
                   className="h-9 text-xs rounded-lg"
                 />
@@ -245,7 +219,7 @@ export default function DashboardSettingsPage() {
                   type="number"
                   step="0.5"
                   value={colorDoublePrice}
-                  onChange={(e) => setColorDoublePrice(e.target.value)}
+                  onChange={(e) => dispatch(setColorDoublePrice(e.target.value))}
                   disabled={!isColorEnabled}
                   className="h-9 text-xs rounded-lg"
                 />
@@ -266,7 +240,7 @@ export default function DashboardSettingsPage() {
                 Allow customers to choose double-sided prints.
               </p>
             </div>
-            <Switch checked={isDuplexEnabled} onCheckedChange={setIsDuplexEnabled} />
+            <Switch checked={isDuplexEnabled} onCheckedChange={(val) => dispatch(setDuplexEnabled(val))} />
           </CardContent>
         </Card>
       </div>

@@ -56,7 +56,7 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
 
   const processSelectedFile = async (file: File) => {
     if (!file.name.toLowerCase().endsWith(".pdf") && file.type !== "application/pdf") {
-      setErrorMessage("Please select a PDF document. (Other formats can be converted to PDF first)");
+      setErrorMessage("Please select a pdf document. (Other formats can be converted to pdf first)");
       setUploadStatus("error");
       return;
     }
@@ -80,7 +80,7 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
       const inspectionRes = await inspectUploadedPdf(fileKey);
 
       if (inspectionRes.data.isEncrypted) {
-        setErrorMessage("This PDF is password protected. Please remove the password and re-upload.");
+        setErrorMessage("This pdf is password protected. Please remove the password and re-upload.");
         setUploadStatus("error");
         return;
       }
@@ -138,7 +138,7 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
             </div>
 
             <h3 className="text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 mb-1">
-              Tap or drag PDF to print
+              Tap or drag pdf to print
             </h3>
             <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xs mb-4">
               Select any document from your phone or computer. 100% private.
