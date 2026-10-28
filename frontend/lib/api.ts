@@ -552,6 +552,145 @@ export async function fetchLedgerHistory(
   return data;
 }
 
+export interface LedgerAnalyticsResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    range: string;
+    startDate: string;
+    endDate: string;
+    isSingleDay: boolean;
+    summary: {
+      totalRevenue: number;
+      cashCollected: number;
+      upiCollected: number;
+      unpaidAmount: number;
+      totalJobsCompleted: number;
+      averageOrderValue: number;
+      totalPagesPrinted: number;
+      bwPagesPrinted: number;
+      colorPagesPrinted: number;
+      duplexSheetsPrinted: number;
+    };
+    timeline: {
+      key: string;
+      label: string;
+      date?: string;
+      revenue: number;
+      orders: number;
+      cash: number;
+      upi: number;
+      bwPages: number;
+      colorPages: number;
+    }[];
+    breakdown: {
+      cashPercentage: number;
+      upiPercentage: number;
+      unpaidPercentage: number;
+      bwPercentage: number;
+      colorPercentage: number;
+      peakHour: string;
+    };
+  };
+}
+
+export async function fetchLedgerAnalytics(
+  token: string,
+  params: {
+    range?: string;
+    startDate?: string;
+    endDate?: string;
+    paymentStatus?: string;
+  }
+): Promise<LedgerAnalyticsResponse> {
+  const query = new URLSearchParams();
+  if (params.range) query.set("range", params.range);
+  if (params.startDate) query.set("startDate", params.startDate);
+  if (params.endDate) query.set("endDate", params.endDate);
+  if (params.paymentStatus) query.set("paymentStatus", params.paymentStatus);
+
+  const res = await fetch(`${API_BASE}/shop/ledger/analytics?${query.toString()}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch analytics");
+  }
+  return data;
+}
+
+export interface EnrichedHistoryJob {
+  id: string;
+  pickupPin: string;
+  status: string;
+  totalAmount: string;
+  paymentStatus: string;
+  customerPhoneMasked?: string | null;
+  completedAt: string;
+  createdAt: string;
+  items: {
+    id: string;
+    jobId: string;
+    originalFilename: string;
+    pageCount: number;
+    pageRange: string;
+    copies: number;
+    colorMode: string;
+    paperSize: string;
+    isDuplex: boolean;
+    itemPrice: string;
+  }[];
+}
+
+export interface FilteredLedgerHistoryResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    jobs: EnrichedHistoryJob[];
+    pagination: {
+      limit: number;
+      offset: number;
+      count: number;
+      totalCount: number;
+    };
+  };
+}
+
+export async function fetchFilteredLedgerHistory(
+  token: string,
+  params: {
+    range?: string;
+    startDate?: string;
+    endDate?: string;
+    paymentStatus?: string;
+    search?: string;
+    sortBy?: string;
+    limit?: number;
+    offset?: number;
+  }
+): Promise<FilteredLedgerHistoryResponse> {
+  const query = new URLSearchParams();
+  if (params.range) query.set("range", params.range);
+  if (params.startDate) query.set("startDate", params.startDate);
+  if (params.endDate) query.set("endDate", params.endDate);
+  if (params.paymentStatus) query.set("paymentStatus", params.paymentStatus);
+  if (params.search) query.set("search", params.search);
+  if (params.sortBy) query.set("sortBy", params.sortBy);
+  if (params.limit !== undefined) query.set("limit", params.limit.toString());
+  if (params.offset !== undefined) query.set("offset", params.offset.toString());
+
+  const res = await fetch(`${API_BASE}/shop/ledger/history?${query.toString()}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch order history");
+  }
+  return data;
+}
+
 export async function updateLedgerPayment(
   token: string,
   jobId: string,

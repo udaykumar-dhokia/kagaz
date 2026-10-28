@@ -3,6 +3,7 @@ import authReducer from "./slices/authSlice";
 import queueReducer from "./slices/queueSlice";
 import catalogReducer from "./slices/catalogSlice";
 import customerReducer from "./slices/customerSlice";
+import ledgerReducer from "./slices/ledgerSlice";
 
 export const makeStore = () => {
   const originalRandom = Math.random;
@@ -16,6 +17,7 @@ export const makeStore = () => {
         queue: queueReducer,
         catalog: catalogReducer,
         customer: customerReducer,
+        ledger: ledgerReducer,
       },
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
