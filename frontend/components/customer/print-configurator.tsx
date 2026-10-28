@@ -423,8 +423,8 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
           <Separator className="my-1.5 bg-neutral-200 dark:bg-neutral-800" />
 
           <div className="flex justify-between items-baseline text-sm">
-            <span className="font-bold text-neutral-900 dark:text-neutral-100">Total to Collect:</span>
-            <span className="text-xl font-extrabold text-neutral-950 dark:text-neutral-50">
+            <span className="font-medium text-neutral-900 dark:text-neutral-100">Total:</span>
+            <span className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
               ₹{quote.total.toFixed(2)}
             </span>
           </div>
@@ -433,10 +433,10 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
         <Button
           onClick={handleSubmit}
           disabled={isSubmitting || (pageSelection === "custom" && parsedEffectivePages === null)}
-          className="w-full h-12 rounded-xl text-base font-bold shadow-sm flex items-center justify-center gap-2"
+          className="w-full h-10 rounded-lg text-sm font-medium shadow-2xs flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
-            <span>Generating 4-digit pin...</span>
+            <span>Generating pin...</span>
           ) : (
             <>
               <span>Get 4-digit pickup pin</span>

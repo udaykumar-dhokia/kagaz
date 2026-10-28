@@ -150,7 +150,7 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
           <span>Kagaz Instant Print</span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-950 dark:text-neutral-50">
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
           {shop.name}
         </h1>
 
@@ -172,15 +172,15 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="font-bold text-sm text-neutral-950 dark:text-neutral-50">
+                  <h4 className="font-medium text-sm text-neutral-900 dark:text-neutral-50">
                     Active job pin: {activeRecoveryJob.pickupPin}
                   </h4>
-                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 rounded-md font-normal">
                     {activeRecoveryJob.status === "PRINTING" ? "Printing now" : "In queue"}
                   </Badge>
                 </div>
                 <p className="text-xs text-neutral-600 dark:text-neutral-300 mt-0.5">
-                  Amount: ₹{activeRecoveryJob.totalAmount} • You have a ticket waiting.
+                  Amount: ₹{activeRecoveryJob.totalAmount}
                 </p>
               </div>
             </div>
@@ -190,7 +190,7 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
               size="icon"
               onClick={handleDismissRecovery}
               className="h-6 w-6 text-neutral-400 hover:text-neutral-700"
-              title="Dismiss and start new print"
+              title="Dismiss"
             >
               <X className="h-3.5 w-3.5" />
             </Button>
@@ -200,9 +200,9 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
             <Button
               size="sm"
               onClick={handleGoToTicket}
-              className="flex-1 h-9 rounded-lg text-xs font-bold shadow-xs"
+              className="flex-1 h-9 rounded-lg text-xs font-medium shadow-2xs"
             >
-              <span>View My Ticket</span>
+              <span>View ticket</span>
               <ExternalLink className="h-3.5 w-3.5 ml-1.5" />
             </Button>
             <Button

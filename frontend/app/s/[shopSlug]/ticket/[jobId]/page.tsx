@@ -119,12 +119,12 @@ function TicketContent({
       <div className="text-center space-y-1">
         <Badge
           variant="secondary"
-          className="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+          className="px-2.5 py-0.5 text-xs font-normal rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
         >
           <Sparkles className="h-3 w-3 mr-1 inline" />
-          Order Registered
+          Order registered
         </Badge>
-        <h1 className="text-2xl font-extrabold tracking-tight text-neutral-950 dark:text-neutral-50 pt-1">
+        <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 pt-0.5">
           Counter Pickup Ticket
         </h1>
         <p className="text-xs text-neutral-500">
@@ -133,39 +133,35 @@ function TicketContent({
       </div>
 
       {/* The Giant PIN Card */}
-      <Card className="border-2 border-neutral-900 dark:border-neutral-100 shadow-md bg-white dark:bg-neutral-900 overflow-hidden text-center">
-        <div className="bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 py-2.5 px-4 text-xs font-semibold tracking-wide">
+      <Card className="border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-2xs bg-white dark:bg-neutral-900 overflow-hidden text-center">
+        <div className="bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 py-2 px-3 text-xs font-medium tracking-wide">
           Pickup pin
         </div>
 
-        <CardContent className="p-6 sm:p-8 space-y-4">
+        <CardContent className="p-6 space-y-3">
           {/* Giant PIN display */}
           <div
             onClick={handleCopyPin}
-            className="cursor-pointer group flex items-center justify-center gap-3 select-all py-2"
+            className="cursor-pointer group flex items-center justify-center gap-3 select-all py-1"
           >
-            <span className="font-mono text-5xl sm:text-6xl font-black tracking-widest text-neutral-950 dark:text-neutral-50 group-hover:scale-105 transition-transform">
+            <span className="font-mono text-4xl sm:text-5xl font-semibold tracking-wider text-neutral-900 dark:text-neutral-50 group-hover:scale-102 transition-transform">
               {job.pickupPin}
             </span>
             <Button
               variant="outline"
               size="icon"
-              className="h-9 w-9 rounded-xl shrink-0 border-neutral-300 dark:border-neutral-700"
+              className="h-8 w-8 rounded-lg shrink-0 border-neutral-200 dark:border-neutral-700"
             >
-              {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
+              {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
             </Button>
           </div>
-
-          <p className="text-xs text-neutral-500 dark:text-neutral-400">
-            Tell this 4-digit code to the shopkeeper at the counter.
-          </p>
 
           <Separator className="bg-neutral-200 dark:bg-neutral-800" />
 
           {/* Amount to pay */}
-          <div className="flex items-center justify-between pt-1">
-            <span className="text-xs font-medium text-neutral-500">Amount to pay at counter:</span>
-            <span className="text-xl font-extrabold text-neutral-950 dark:text-neutral-50">
+          <div className="flex items-center justify-between pt-0.5">
+            <span className="text-xs font-normal text-neutral-500">Amount to pay at counter:</span>
+            <span className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
               ₹{job.totalAmount}
             </span>
           </div>
@@ -173,22 +169,22 @@ function TicketContent({
       </Card>
 
       {/* Live Order Status Stepper */}
-      <Card className="border border-neutral-200 dark:border-neutral-800 p-5 space-y-4">
+      <Card className="border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 space-y-3.5">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-neutral-500 tracking-wider">
-            Live print status
+          <span className="text-xs font-medium text-neutral-500">
+            Live status
           </span>
           {isCompleted ? (
-            <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white text-xs">
+            <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white text-xs rounded-md font-normal">
               Printed & Done
             </Badge>
           ) : isPrinting ? (
-            <Badge className="bg-blue-600 hover:bg-blue-600 text-white text-xs animate-pulse">
-              Printing Now...
+            <Badge className="bg-blue-600 hover:bg-blue-600 text-white text-xs animate-pulse rounded-md font-normal">
+              Printing...
             </Badge>
           ) : (
-            <Badge variant="secondary" className="text-xs">
-              Waiting in Queue
+            <Badge variant="secondary" className="text-xs rounded-md font-normal">
+              In queue
             </Badge>
           )}
         </div>
@@ -253,9 +249,9 @@ function TicketContent({
         }}
         className="block"
       >
-        <Button variant="outline" className="w-full h-11 rounded-xl text-xs font-semibold">
+        <Button variant="outline" className="w-full h-9 rounded-lg text-xs font-medium">
           <PlusCircle className="h-4 w-4 mr-1.5" />
-          Print Another Document
+          Print another document
         </Button>
       </Link>
 

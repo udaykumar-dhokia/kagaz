@@ -144,8 +144,8 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
               Select any document from your phone or computer. 100% private.
             </p>
 
-            <Button type="button" variant="outline" className="rounded-full px-6 font-medium shadow-xs">
-              Choose Document
+            <Button type="button" variant="outline" className="h-9 rounded-lg px-4 font-medium shadow-2xs">
+              Choose document
             </Button>
 
             <div className="flex items-center gap-2 mt-6 text-xs text-neutral-400 dark:text-neutral-500">

@@ -28,7 +28,7 @@ export default function HomePage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold">
               <Printer className="h-5 w-5" />
             </div>
-            <span className="font-extrabold text-lg tracking-tight">Kagaz</span>
+            <span className="font-semibold text-lg tracking-tight">Kagaz</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -38,7 +38,7 @@ export default function HomePage() {
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="sm" className="rounded-full px-4 text-xs sm:text-sm font-semibold">
+              <Button size="sm" className="rounded-lg h-8 px-3.5 text-xs sm:text-sm font-medium">
                 Register Shop
               </Button>
             </Link>
@@ -52,7 +52,7 @@ export default function HomePage() {
           ⚡ No WhatsApp • Zero PC Downloads • 100% Private
         </Badge>
 
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight max-w-2xl text-neutral-950 dark:text-neutral-50 leading-tight sm:leading-none">
+        <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight max-w-2xl text-neutral-900 dark:text-neutral-50 leading-tight sm:leading-none">
           Direct Xerox & Print Shop Platform
         </h1>
 
@@ -62,9 +62,9 @@ export default function HomePage() {
         </p>
 
         {/* Enter Shop Code Form */}
-        <Card className="mt-8 w-full max-w-md border-neutral-200 dark:border-neutral-800 shadow-sm p-4">
+        <Card className="mt-8 w-full max-w-md border-neutral-200 dark:border-neutral-800 shadow-sm p-4 rounded-xl">
           <form onSubmit={handleGoToShop} className="space-y-3">
-            <label className="block text-left text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+            <label className="block text-left text-xs font-medium text-neutral-700 dark:text-neutral-300">
               Have a shop code or link?
             </label>
             <div className="flex gap-2">
@@ -72,10 +72,10 @@ export default function HomePage() {
                 placeholder="e.g. sharma-xerox"
                 value={shopCode}
                 onChange={(e) => setShopCode(e.target.value)}
-                className="h-11 rounded-lg"
+                className="h-10 rounded-lg"
               />
-              <Button type="submit" className="h-11 px-5 rounded-lg font-semibold shrink-0">
-                Go to Shop <ArrowRight className="ml-1 h-4 w-4" />
+              <Button type="submit" className="h-10 px-4 rounded-lg font-medium shrink-0">
+                Go to shop <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
             </div>
             <p className="text-xs text-left text-neutral-400">

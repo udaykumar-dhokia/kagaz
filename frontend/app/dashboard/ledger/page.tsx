@@ -95,15 +95,15 @@ export default function DashboardLedgerPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-5 max-w-5xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black tracking-tight text-neutral-950 dark:text-neutral-50">
+          <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
             Daily Ledger & Reports
           </h1>
           <p className="text-xs text-neutral-500">
-            Track today's counter earnings, cash vs. UPI collection, and printed volumes.
+            Today's earnings and print volumes.
           </p>
         </div>
 
@@ -111,7 +111,7 @@ export default function DashboardLedgerPage() {
           variant="outline"
           size="sm"
           onClick={() => token && loadData(token)}
-          className="text-xs h-9"
+          className="text-xs h-8 px-3 rounded-lg font-medium"
         >
           <RefreshCw className="h-3.5 w-3.5 mr-1" />
           Refresh
@@ -119,29 +119,29 @@ export default function DashboardLedgerPage() {
       </div>
 
       {/* 4 Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {/* Total Revenue */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs p-4">
+        <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
-            <span className="text-[11px] font-semibold text-neutral-500 tracking-wider">
+            <span className="text-[11px] font-medium text-neutral-500">
               Today's revenue
             </span>
-            <div className="text-2xl sm:text-3xl font-black text-neutral-950 dark:text-neutral-50">
+            <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               ₹{ledgerData?.totalRevenue.toFixed(2) || "0.00"}
             </div>
             <p className="text-[11px] text-neutral-400">
-              {ledgerData?.totalJobsCompleted || 0} prints completed
+              {ledgerData?.totalJobsCompleted || 0} completed
             </p>
           </CardContent>
         </Card>
 
         {/* Cash Collected */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs p-4">
+        <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
-            <span className="text-[11px] font-semibold text-emerald-600 tracking-wider flex items-center gap-1">
-              <Banknote className="h-3.5 w-3.5" /> Cash collected
+            <span className="text-[11px] font-medium text-emerald-600 flex items-center gap-1">
+              <Banknote className="h-3.5 w-3.5" /> Cash
             </span>
-            <div className="text-2xl sm:text-3xl font-black text-neutral-950 dark:text-neutral-50">
+            <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               ₹{ledgerData?.cashCollected.toFixed(2) || "0.00"}
             </div>
             <p className="text-[11px] text-neutral-400">Cash in drawer</p>
@@ -149,25 +149,25 @@ export default function DashboardLedgerPage() {
         </Card>
 
         {/* UPI Collected */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs p-4">
+        <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
-            <span className="text-[11px] font-semibold text-blue-600 tracking-wider flex items-center gap-1">
-              <CreditCard className="h-3.5 w-3.5" /> Upi payments
+            <span className="text-[11px] font-medium text-blue-600 flex items-center gap-1">
+              <CreditCard className="h-3.5 w-3.5" /> Upi
             </span>
-            <div className="text-2xl sm:text-3xl font-black text-neutral-950 dark:text-neutral-50">
+            <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               ₹{ledgerData?.upiCollected.toFixed(2) || "0.00"}
             </div>
-            <p className="text-[11px] text-neutral-400">Online bank settlement</p>
+            <p className="text-[11px] text-neutral-400">Online settlement</p>
           </CardContent>
         </Card>
 
         {/* Total Pages Printed */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs p-4">
+        <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs p-3.5 rounded-xl">
           <CardContent className="p-0 space-y-1">
-            <span className="text-[11px] font-semibold text-neutral-500 tracking-wider">
+            <span className="text-[11px] font-medium text-neutral-500">
               Pages printed
             </span>
-            <div className="text-2xl sm:text-3xl font-black text-neutral-950 dark:text-neutral-50">
+            <div className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
               {ledgerData?.totalPagesPrinted || 0}
             </div>
             <p className="text-[11px] text-neutral-400">
@@ -178,37 +178,37 @@ export default function DashboardLedgerPage() {
       </div>
 
       {/* Completed Orders History Table */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-sm text-neutral-900 dark:text-neutral-100">
+          <h3 className="font-medium text-sm text-neutral-900 dark:text-neutral-100">
             Recent Completed Print Orders
           </h3>
           <span className="text-xs text-neutral-400">
-            Showing last {historyJobs.length} completed prints
+            Last {historyJobs.length} orders
           </span>
         </div>
 
         {historyJobs.length === 0 ? (
-          <Card className="p-8 text-center border-dashed border-neutral-200 dark:border-neutral-800">
+          <Card className="p-8 text-center rounded-xl border border-dashed border-neutral-200 dark:border-neutral-800">
             <p className="text-xs text-neutral-400">No completed orders recorded today yet.</p>
           </Card>
         ) : (
-          <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden shadow-xs">
+          <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto shadow-2xs">
             <Table>
               <TableHeader className="bg-neutral-50/70 dark:bg-neutral-950/40">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[100px] text-xs font-semibold">Pin</TableHead>
-                  <TableHead className="text-xs font-semibold">Completed at</TableHead>
-                  <TableHead className="text-xs font-semibold">Customer</TableHead>
-                  <TableHead className="text-xs font-semibold text-right">Amount</TableHead>
-                  <TableHead className="w-[160px] text-xs font-semibold text-right">Payment status</TableHead>
+                  <TableHead className="w-[100px] text-xs font-medium">Pin</TableHead>
+                  <TableHead className="text-xs font-medium">Completed at</TableHead>
+                  <TableHead className="text-xs font-medium">Customer</TableHead>
+                  <TableHead className="text-xs font-medium text-right">Amount</TableHead>
+                  <TableHead className="w-[140px] text-xs font-medium text-right">Payment</TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody>
                 {historyJobs.map((job) => (
                   <TableRow key={job.id} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30">
-                    <TableCell className="font-mono font-bold text-sm">
+                    <TableCell className="font-mono font-medium text-sm">
                       {job.pickupPin}
                     </TableCell>
 
@@ -219,11 +219,11 @@ export default function DashboardLedgerPage() {
                       })}
                     </TableCell>
 
-                    <TableCell className="text-xs text-neutral-600 dark:text-neutral-400">
-                      {job.customerPhoneMasked || "Walk-in Guest"}
+                    <TableCell className="text-xs text-neutral-500">
+                      {job.customerPhoneMasked || "Walk-in"}
                     </TableCell>
 
-                    <TableCell className="text-right font-extrabold text-sm text-neutral-900 dark:text-neutral-100">
+                    <TableCell className="text-right font-medium text-sm text-neutral-900 dark:text-neutral-100">
                       ₹{job.totalAmount}
                     </TableCell>
 
@@ -232,14 +232,14 @@ export default function DashboardLedgerPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => handleTogglePayment(job.id, job.paymentStatus)}
-                        className={`h-7 px-2.5 text-[11px] font-bold rounded-lg ${
+                        className={`h-7 px-2.5 text-[11px] font-medium rounded-lg ${
                           job.paymentStatus === "PAID_UPI"
                             ? "border-blue-200 text-blue-700 bg-blue-50/40 dark:border-blue-800 dark:text-blue-300"
                             : "border-emerald-200 text-emerald-700 bg-emerald-50/40 dark:border-emerald-800 dark:text-emerald-300"
                         }`}
-                        title="Click to toggle Cash vs UPI"
+                        title="Click to toggle Cash vs Upi"
                       >
-                        {job.paymentStatus === "PAID_UPI" ? "UPI Paid" : "Cash Paid"}
+                        {job.paymentStatus === "PAID_UPI" ? "Upi" : "Cash"}
                       </Button>
                     </TableCell>
                   </TableRow>

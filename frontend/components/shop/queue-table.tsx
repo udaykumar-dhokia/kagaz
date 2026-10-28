@@ -44,11 +44,11 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
             <Inbox className="h-7 w-7 text-neutral-500" />
           </div>
 
-          <h3 className="font-bold text-base text-neutral-900 dark:text-neutral-100">
-            Queue is Clear
+          <h3 className="font-medium text-sm text-neutral-900 dark:text-neutral-100">
+            No active orders
           </h3>
           <p className="text-xs text-neutral-500">
-            Waiting for walk-in customers to scan your counter QR code. New jobs will chime automatically!
+            New customer print jobs will appear here automatically.
           </p>
         </div>
       </Card>
@@ -56,15 +56,15 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
   }
 
   return (
-    <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden shadow-xs">
+    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto shadow-2xs">
       <Table>
         <TableHeader className="bg-neutral-50/70 dark:bg-neutral-950/40">
           <TableRow className="hover:bg-transparent">
-            <TableHead className="w-[120px] text-xs font-semibold">Pin</TableHead>
-            <TableHead className="text-xs font-semibold">Document & specs</TableHead>
-            <TableHead className="text-xs font-semibold">Customer</TableHead>
-            <TableHead className="text-xs font-semibold text-right">Collect</TableHead>
-            <TableHead className="w-[180px] text-xs font-semibold text-right">Actions</TableHead>
+            <TableHead className="w-[120px] text-xs font-medium">Pin</TableHead>
+            <TableHead className="text-xs font-medium">Document & specs</TableHead>
+            <TableHead className="text-xs font-medium">Customer</TableHead>
+            <TableHead className="text-xs font-medium text-right">Collect</TableHead>
+            <TableHead className="w-[160px] text-xs font-medium text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -78,13 +78,13 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                 className="cursor-pointer hover:bg-neutral-50/80 dark:hover:bg-neutral-800/40 transition-colors"
               >
                 {/* 1. PIN */}
-                <TableCell className="font-medium">
+                <TableCell className="font-normal">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xl font-black tracking-wider text-neutral-950 dark:text-neutral-50">
+                    <span className="font-mono text-base font-semibold tracking-wide text-neutral-900 dark:text-neutral-100">
                       {job.pickupPin}
                     </span>
                     {job.status === "PRINTING" && (
-                      <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" title="Printing" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" title="Printing" />
                     )}
                   </div>
                   <span className="text-[10px] text-neutral-400">
@@ -95,7 +95,7 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                 {/* 2. Document & Specs */}
                 <TableCell>
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 font-semibold text-xs text-neutral-900 dark:text-neutral-100">
+                    <div className="flex items-center gap-1.5 font-medium text-xs text-neutral-900 dark:text-neutral-100">
                       <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
                       <span className="truncate max-w-[240px]">
                         {firstItem?.originalFilename || "Document.pdf"}
@@ -103,28 +103,28 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                     </div>
 
                     <div className="flex flex-wrap gap-1 text-[11px]">
-                      <Badge variant="secondary" className="px-1.5 py-0 text-[10px] font-medium">
+                      <Badge variant="secondary" className="px-1.5 py-0 text-[10px] font-normal rounded-md">
                         {firstItem?.pageCount} pgs
                         {firstItem?.pageRange !== "all" && ` (${firstItem?.pageRange})`}
                       </Badge>
 
                       <Badge
                         variant="outline"
-                        className={`px-1.5 py-0 text-[10px] ${
+                        className={`px-1.5 py-0 text-[10px] rounded-md font-normal ${
                           firstItem?.colorMode === "COLOR"
-                            ? "border-amber-500 text-amber-700 dark:text-amber-300 font-semibold"
+                            ? "border-amber-500 text-amber-700 dark:text-amber-300"
                             : ""
                         }`}
                       >
                         {firstItem?.colorMode === "COLOR" ? "Color" : "B&w"}
                       </Badge>
 
-                      <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
+                      <Badge variant="outline" className="px-1.5 py-0 text-[10px] rounded-md font-normal">
                         {firstItem?.isDuplex ? "Duplex" : "Single"}
                       </Badge>
 
                       {firstItem && firstItem.copies > 1 && (
-                        <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
+                        <Badge variant="outline" className="px-1.5 py-0 text-[10px] rounded-md font-normal">
                           {firstItem.copies}x
                         </Badge>
                       )}
@@ -135,21 +135,21 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                 {/* 3. Customer */}
                 <TableCell className="text-xs text-neutral-500">
                   {job.customerPhoneMasked ? (
-                    <span className="font-medium text-neutral-800 dark:text-neutral-200">
+                    <span className="font-normal text-neutral-800 dark:text-neutral-200">
                       {job.customerPhoneMasked}
                     </span>
                   ) : (
-                    <span className="text-neutral-400 italic">Walk-in guest</span>
+                    <span className="text-neutral-400">Walk-in</span>
                   )}
                 </TableCell>
 
                 {/* 4. Total Amount */}
                 <TableCell className="text-right">
-                  <div className="font-extrabold text-sm text-neutral-950 dark:text-neutral-50">
+                  <div className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">
                     ₹{job.totalAmount}
                   </div>
-                  <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-200 px-1 py-0">
-                    {job.paymentStatus === "PAID_UPI" ? "Paid (Upi)" : "Cash"}
+                  <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-200 px-1 py-0 rounded-md font-normal">
+                    {job.paymentStatus === "PAID_UPI" ? "Upi" : "Cash"}
                   </Badge>
                 </TableCell>
 
@@ -159,7 +159,7 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                     <Button
                       size="sm"
                       onClick={() => onSelectJob(job)}
-                      className="h-8 px-3 rounded-lg text-xs font-semibold shadow-2xs"
+                      className="h-8 px-3 rounded-lg text-xs font-medium shadow-2xs"
                     >
                       <Printer className="h-3.5 w-3.5 mr-1" />
                       Print
@@ -168,8 +168,8 @@ export function QueueTable({ jobs, onSelectJob, onQuickComplete }: QueueTablePro
                       size="sm"
                       variant="outline"
                       onClick={() => onQuickComplete(job.id)}
-                      className="h-8 px-2.5 rounded-lg text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
-                      title="Quick done & shred"
+                      className="h-8 w-8 p-0 rounded-lg text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
+                      title="Quick complete"
                     >
                       <CheckCircle2 className="h-4 w-4" />
                     </Button>

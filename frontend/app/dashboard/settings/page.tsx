@@ -156,54 +156,54 @@ export default function DashboardSettingsPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl sm:text-2xl font-black tracking-tight text-neutral-950 dark:text-neutral-50">
+        <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
           Services & Rate Card
         </h1>
         <p className="text-xs text-neutral-500">
-          Control which printing capabilities are offered to walk-in customers and configure per-page rates.
+          Configure rates and print options for walk-in customers.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* 1. Black & White Settings */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs">
-          <CardHeader className="pb-3">
+        <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs rounded-xl">
+          <CardHeader className="pb-2.5">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-bold flex items-center gap-2">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <span>Black & White Printing</span>
               </CardTitle>
               <Switch checked={isBwEnabled} onCheckedChange={setIsBwEnabled} />
             </div>
             <CardDescription className="text-xs">
-              Monochrome laser printing rates per sheet or side
+              Monochrome printing rates per sheet or side
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4 pt-1">
+          <CardContent className="space-y-3 pt-1">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Single-Sided Rate (₹)</Label>
+                <Label className="text-xs font-medium">Single-Sided (₹)</Label>
                 <Input
                   type="number"
                   step="0.5"
                   value={bwSinglePrice}
                   onChange={(e) => setBwSinglePrice(e.target.value)}
                   disabled={!isBwEnabled}
-                  className="h-9 text-xs"
+                  className="h-9 text-xs rounded-lg"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Double-Sided Rate (₹/side)</Label>
+                <Label className="text-xs font-medium">Double-Sided (₹/side)</Label>
                 <Input
                   type="number"
                   step="0.5"
                   value={bwDoublePrice}
                   onChange={(e) => setBwDoublePrice(e.target.value)}
                   disabled={!isBwEnabled}
-                  className="h-9 text-xs"
+                  className="h-9 text-xs rounded-lg"
                 />
               </div>
             </div>
@@ -211,43 +211,43 @@ export default function DashboardSettingsPage() {
         </Card>
 
         {/* 2. Color Settings */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs">
-          <CardHeader className="pb-3">
+        <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs rounded-xl">
+          <CardHeader className="pb-2.5">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-bold flex items-center gap-2">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Palette className="h-4 w-4 text-amber-500" />
                 <span>Color Printing</span>
               </CardTitle>
               <Switch checked={isColorEnabled} onCheckedChange={setIsColorEnabled} />
             </div>
             <CardDescription className="text-xs">
-              If disabled, the Color option is hidden on customer phones
+              Enable or disable color printing options
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4 pt-1">
+          <CardContent className="space-y-3 pt-1">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Single-Sided Rate (₹)</Label>
+                <Label className="text-xs font-medium">Single-Sided (₹)</Label>
                 <Input
                   type="number"
                   step="0.5"
                   value={colorSinglePrice}
                   onChange={(e) => setColorSinglePrice(e.target.value)}
                   disabled={!isColorEnabled}
-                  className="h-9 text-xs"
+                  className="h-9 text-xs rounded-lg"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Double-Sided Rate (₹/side)</Label>
+                <Label className="text-xs font-medium">Double-Sided (₹/side)</Label>
                 <Input
                   type="number"
                   step="0.5"
                   value={colorDoublePrice}
                   onChange={(e) => setColorDoublePrice(e.target.value)}
                   disabled={!isColorEnabled}
-                  className="h-9 text-xs"
+                  className="h-9 text-xs rounded-lg"
                 />
               </div>
             </div>
@@ -255,15 +255,15 @@ export default function DashboardSettingsPage() {
         </Card>
 
         {/* 3. Duplex Capability */}
-        <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs md:col-span-2">
+        <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs md:col-span-2 rounded-xl">
           <CardContent className="p-4 flex items-center justify-between">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
                 <Layers className="h-4 w-4 text-neutral-500" />
-                <Label className="text-sm font-bold">Offer Double-Sided (Duplex) Printing?</Label>
+                <Label className="text-sm font-medium">Double-sided printing</Label>
               </div>
               <p className="text-xs text-neutral-500">
-                Turn off if your shop only has single-sided printers.
+                Allow customers to choose double-sided prints.
               </p>
             </div>
             <Switch checked={isDuplexEnabled} onCheckedChange={setIsDuplexEnabled} />
@@ -276,48 +276,48 @@ export default function DashboardSettingsPage() {
         <Button
           onClick={handleSaveSettings}
           disabled={isSaving}
-          className="h-10 px-6 rounded-xl text-xs font-bold shadow-sm"
+          className="h-9 px-4 rounded-lg text-xs font-medium shadow-2xs"
         >
-          <Save className="h-4 w-4 mr-1.5" />
-          {isSaving ? "Saving..." : "Save Rate Card"}
+          <Save className="h-3.5 w-3.5 mr-1.5" />
+          {isSaving ? "Saving..." : "Save rate card"}
         </Button>
       </div>
 
-      <Separator className="bg-neutral-200 dark:bg-neutral-800 my-6" />
+      <Separator className="bg-neutral-200 dark:bg-neutral-800 my-4" />
 
       {/* 4. Custom Add-ons Manager */}
-      <Card className="border border-neutral-200/80 dark:border-neutral-800 shadow-2xs">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">Extra Services & Add-ons</CardTitle>
+      <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs rounded-xl">
+        <CardHeader className="pb-2.5">
+          <CardTitle className="text-sm font-semibold">Extra Services & Add-ons</CardTitle>
           <CardDescription className="text-xs">
-            Add custom services like Spiral Binding, A4 Lamination, or Stapling with a fixed price
+            Optional services like binding, lamination, or stapling
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3">
           {/* Active Addons List */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {addons.length === 0 ? (
-              <p className="text-xs text-neutral-400 italic">No extra add-on services configured yet.</p>
+              <p className="text-xs text-neutral-400">No extra add-on services configured.</p>
             ) : (
               addons.map((a) => (
                 <div
                   key={a.id}
-                  className="flex items-center justify-between p-2.5 rounded-xl border border-neutral-200/70 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40"
+                  className="flex items-center justify-between p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40"
                 >
-                  <span className="font-semibold text-xs text-neutral-900 dark:text-neutral-100">
+                  <span className="font-medium text-xs text-neutral-900 dark:text-neutral-100">
                     {a.name}
                   </span>
 
-                  <div className="flex items-center gap-3">
-                    <Badge variant="secondary" className="font-bold text-xs">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="font-medium text-xs rounded-md">
                       +₹{a.price}
                     </Badge>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => handleDeleteAddon(a.id, a.name)}
-                      className="h-7 w-7 text-neutral-400 hover:text-red-600"
+                      className="h-7 w-7 rounded-md text-neutral-400 hover:text-red-600"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -328,12 +328,12 @@ export default function DashboardSettingsPage() {
           </div>
 
           {/* Add New Service Form */}
-          <form onSubmit={handleAddAddon} className="flex flex-col sm:flex-row gap-2 pt-2">
+          <form onSubmit={handleAddAddon} className="flex flex-col sm:flex-row gap-2 pt-1">
             <Input
-              placeholder="e.g. Spiral Binding (upto 100 pgs)"
+              placeholder="e.g. Spiral Binding"
               value={newAddonName}
               onChange={(e) => setNewAddonName(e.target.value)}
-              className="h-9 text-xs flex-1"
+              className="h-9 text-xs rounded-lg flex-1"
             />
             <div className="flex gap-2">
               <Input
@@ -342,15 +342,15 @@ export default function DashboardSettingsPage() {
                 step="1"
                 value={newAddonPrice}
                 onChange={(e) => setNewAddonPrice(e.target.value)}
-                className="h-9 text-xs w-24 text-right"
+                className="h-9 text-xs rounded-lg w-24 text-right"
               />
               <Button
                 type="submit"
                 disabled={isAddingAddon || !newAddonName.trim() || !newAddonPrice}
-                className="h-9 px-4 rounded-lg text-xs font-bold shrink-0"
+                className="h-9 px-3 rounded-lg text-xs font-medium shrink-0"
               >
                 <Plus className="h-3.5 w-3.5 mr-1" />
-                Add Service
+                Add service
               </Button>
             </div>
           </form>

@@ -62,7 +62,7 @@ export default function ShopRegisterPage() {
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm">
             <Store className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight">Register Xerox & Print Shop</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">Register Xerox & Print Shop</h1>
           <p className="text-xs text-neutral-500">
             Generate your unique shop QR code standee in 30 seconds
           </p>

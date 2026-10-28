@@ -40,8 +40,8 @@ export function QuickPinBar({ onSearchPin, isLoading }: QuickPinBarProps) {
   return (
     <form onSubmit={handleSubmit} className="w-full">
       <div className="relative flex items-center">
-        <div className="absolute left-4 flex items-center gap-2 pointer-events-none text-neutral-400">
-          <ScanLine className="h-5 w-5 text-primary" />
+        <div className="absolute left-3.5 flex items-center pointer-events-none text-neutral-400">
+          <ScanLine className="h-4 w-4 text-primary" />
         </div>
 
         <Input
@@ -50,29 +50,29 @@ export function QuickPinBar({ onSearchPin, isLoading }: QuickPinBarProps) {
           inputMode="numeric"
           pattern="[0-9]*"
           maxLength={4}
-          placeholder="Type 4-digit pin (e.g. 4821) or scan qr code..."
+          placeholder="Enter 4-digit pin or scan qr..."
           value={pin}
           onChange={handleInputChange}
-          className="h-14 pl-12 pr-28 text-lg font-mono font-bold tracking-widest rounded-2xl border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm focus-visible:border-primary focus-visible:ring-primary/20 transition-all placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal"
+          className="h-11 pl-10 pr-24 text-base font-mono font-medium tracking-wider rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary/20 transition-all placeholder:font-sans placeholder:text-xs placeholder:font-normal placeholder:tracking-normal"
         />
 
-        <div className="absolute right-3 flex items-center gap-1.5">
+        <div className="absolute right-2 flex items-center gap-1">
           {pin && (
             <Button
               type="button"
               variant="ghost"
               size="icon"
               onClick={() => setPin("")}
-              className="h-8 w-8 text-neutral-400 hover:text-neutral-700"
+              className="h-7 w-7 rounded-md text-neutral-400 hover:text-neutral-700"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3.5 w-3.5" />
             </Button>
           )}
 
           <Button
             type="submit"
             disabled={pin.length !== 4 || isLoading}
-            className="h-9 px-4 rounded-xl text-xs font-bold shadow-xs bg-primary text-primary-foreground"
+            className="h-8 px-3 rounded-lg text-xs font-medium shadow-2xs bg-primary text-primary-foreground"
           >
             {isLoading ? "Searching..." : "Find"}
             <ArrowRight className="h-3.5 w-3.5 ml-1" />

@@ -147,110 +147,108 @@ export function JobPrintModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md p-6 border-neutral-200 dark:border-neutral-800">
-        <DialogHeader className="space-y-1 pb-2 pr-10">
+      <DialogContent className="max-w-md p-5 sm:p-6 rounded-xl border border-neutral-200 dark:border-neutral-800">
+        <DialogHeader className="space-y-1 pb-2 pr-8">
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="font-mono text-xs px-2.5 py-0.5 font-bold tracking-wide">
+            <Badge variant="outline" className="font-mono text-xs px-2 py-0.5 font-medium rounded-md">
               Pin: {job.pickupPin}
             </Badge>
             <Badge
               variant={job.status === "PRINTING" ? "default" : "secondary"}
-              className="text-xs"
+              className="text-xs font-normal rounded-md"
             >
-              {job.status === "PRINTING" ? "Printing now" : "Waiting in queue"}
+              {job.status === "PRINTING" ? "Printing" : "In queue"}
             </Badge>
           </div>
-          <DialogTitle className="text-xl font-bold text-neutral-950 dark:text-neutral-50 pt-1">
+          <DialogTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 pt-1">
             Print Order Details
           </DialogTitle>
           <DialogDescription className="text-xs text-neutral-500">
-            {job.customerPhoneMasked
-              ? `Customer: ${job.customerPhoneMasked}`
-              : "Walk-in guest order (Anonymous)"}
+            {job.customerPhoneMasked ? `Customer: ${job.customerPhoneMasked}` : "Walk-in order"}
           </DialogDescription>
         </DialogHeader>
 
         {/* Specifications Cards */}
-        <div className="space-y-3 py-2">
+        <div className="space-y-2.5 py-1">
           {job.items.map((it, idx) => (
             <div
               key={it.id || idx}
-              className="p-3.5 rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2.5"
+              className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2"
             >
               <div className="flex items-center gap-2 overflow-hidden">
                 <FileText className="h-4 w-4 shrink-0 text-primary" />
-                <span className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 truncate">
+                <span className="font-medium text-xs text-neutral-900 dark:text-neutral-100 truncate">
                   {it.originalFilename}
                 </span>
               </div>
 
               {/* Specs Badges */}
               <div className="flex flex-wrap gap-1.5 text-xs">
-                <Badge variant="secondary" className="font-medium text-[11px]">
-                  {it.pageCount} {it.pageCount === 1 ? "Page" : "Pages"}
+                <Badge variant="secondary" className="rounded-md font-normal text-[11px]">
+                  {it.pageCount} {it.pageCount === 1 ? "page" : "pages"}
                   {it.pageRange !== "all" && ` (${it.pageRange})`}
                 </Badge>
 
                 <Badge
                   variant={it.colorMode === "COLOR" ? "default" : "outline"}
-                  className={`text-[11px] ${
+                  className={`rounded-md text-[11px] font-normal ${
                     it.colorMode === "COLOR"
-                      ? "bg-amber-500 hover:bg-amber-600 text-white font-semibold"
+                      ? "bg-amber-500 hover:bg-amber-600 text-white font-medium"
                       : ""
                   }`}
                 >
                   <Palette className="h-3 w-3 mr-1 inline" />
-                  {it.colorMode === "COLOR" ? "Full color" : "Black & white"}
+                  {it.colorMode === "COLOR" ? "Color" : "B&w"}
                 </Badge>
 
-                <Badge variant="outline" className="text-[11px]">
+                <Badge variant="outline" className="rounded-md font-normal text-[11px]">
                   <Layers className="h-3 w-3 mr-1 inline" />
-                  {it.isDuplex ? "Double-sided (duplex)" : "Single-sided"}
+                  {it.isDuplex ? "Double-sided" : "Single-sided"}
                 </Badge>
 
-                <Badge variant="outline" className="text-[11px]">
+                <Badge variant="outline" className="rounded-md font-normal text-[11px]">
                   <Copy className="h-3 w-3 mr-1 inline" />
-                  {it.copies} {it.copies > 1 ? "Copies" : "Copy"}
+                  {it.copies} {it.copies > 1 ? "copies" : "copy"}
                 </Badge>
 
-                <Badge variant="outline" className="text-[11px]">
+                <Badge variant="outline" className="rounded-md font-normal text-[11px]">
                   {it.paperSize}
                 </Badge>
               </div>
             </div>
           ))}
 
-          {/* Amount to Collect Banner */}
-          <div className="p-3.5 rounded-xl border border-emerald-500/20 bg-emerald-50/40 dark:bg-emerald-950/20 flex items-center justify-between">
-            <span className="text-xs font-bold text-emerald-900 dark:text-emerald-300">
-              Total to collect:
+          {/* Amount Banner */}
+          <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-50/40 dark:bg-emerald-950/20 flex items-center justify-between">
+            <span className="text-xs font-medium text-emerald-900 dark:text-emerald-300">
+              Total:
             </span>
-            <span className="text-2xl font-black text-emerald-950 dark:text-emerald-100">
+            <span className="text-xl font-semibold text-emerald-950 dark:text-emerald-100">
               ₹{job.totalAmount}
             </span>
           </div>
 
           {/* Payment Method Toggle */}
-          <div className="flex items-center justify-between text-xs pt-1">
-            <span className="text-neutral-500 font-medium">Mark paid as:</span>
-            <div className="flex gap-2">
+          <div className="flex items-center justify-between text-xs pt-0.5">
+            <span className="text-neutral-500 font-normal">Payment:</span>
+            <div className="flex gap-1.5">
               <Button
                 type="button"
                 size="sm"
                 variant={paymentChoice === "PAID_CASH" ? "default" : "outline"}
                 onClick={() => setPaymentChoice("PAID_CASH")}
-                className="h-7 text-xs px-2.5 font-semibold"
+                className="h-8 text-xs px-3 font-medium rounded-lg"
               >
-                Cash collected
+                Cash
               </Button>
               <Button
                 type="button"
                 size="sm"
                 variant={paymentChoice === "PAID_UPI" ? "default" : "outline"}
                 onClick={() => setPaymentChoice("PAID_UPI")}
-                className="h-7 text-xs px-2.5 font-semibold"
+                className="h-8 text-xs px-3 font-medium rounded-lg"
               >
-                Upi qr paid
+                Upi
               </Button>
             </div>
           </div>
@@ -259,35 +257,35 @@ export function JobPrintModal({
         <Separator className="bg-neutral-200 dark:bg-neutral-800 my-1" />
 
         {/* Action Buttons */}
-        <DialogFooter className="flex flex-col sm:flex-row gap-2 pt-2">
+        <DialogFooter className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={handleCancelOrder}
-            className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 order-3 sm:order-1"
+            className="h-9 px-3 rounded-lg text-xs font-medium text-neutral-600 hover:text-red-600 hover:bg-neutral-100 dark:hover:bg-neutral-900"
           >
-            Cancel order
+            Cancel
           </Button>
 
           <Button
             type="button"
             onClick={handleTriggerBrowserPrint}
             disabled={isPrinting}
-            className="h-11 px-5 rounded-xl text-xs font-bold flex-1 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm order-1 sm:order-2"
+            className="h-9 px-4 rounded-lg text-xs font-medium bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs"
           >
             <Printer className="h-4 w-4 mr-1.5" />
-            {isPrinting ? "Spooling PDF..." : "Print stream (Spacebar)"}
+            {isPrinting ? "Printing..." : "Print"}
           </Button>
 
           <Button
             type="button"
             onClick={handleMarkCompleted}
             disabled={isCompleting}
-            className="h-11 px-4 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm order-2 sm:order-3"
+            className="h-9 px-4 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
           >
             <CheckCircle2 className="h-4 w-4 mr-1.5" />
-            {isCompleting ? "Shredding..." : "Done & shred"}
+            {isCompleting ? "Saving..." : "Complete"}
           </Button>
         </DialogFooter>
       </DialogContent>

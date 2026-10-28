@@ -124,23 +124,20 @@ export default function DashboardQueuePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Top Banner: Keyboard-First Search Bar */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-neutral-950 dark:text-neutral-50">
+            <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
               Counter Print Queue
             </h1>
-            <p className="text-xs text-neutral-500">
-              Type the customer's 4-digit pin to print instantly.
-            </p>
           </div>
 
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"
-              className={`text-[11px] gap-1 px-2.5 py-0.5 ${
+              className={`text-[11px] font-normal gap-1 px-2 py-0.5 rounded-md ${
                 isConnected
                   ? "border-emerald-300 text-emerald-700 dark:border-emerald-800 dark:text-emerald-400"
                   : "border-neutral-300 text-neutral-400"
@@ -151,17 +148,17 @@ export default function DashboardQueuePage() {
                   isConnected ? "bg-emerald-500 animate-pulse" : "bg-neutral-400"
                 }`}
               />
-              {isConnected ? "Live Sync Active" : "Connecting..."}
+              {isConnected ? "Live" : "Connecting..."}
             </Badge>
 
             <Button
               variant="ghost"
               size="icon"
               onClick={loadQueue}
-              className="h-8 w-8 text-neutral-500 hover:text-neutral-900"
+              className="h-8 w-8 rounded-lg text-neutral-500 hover:text-neutral-900"
               title="Refresh queue"
             >
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
@@ -171,14 +168,14 @@ export default function DashboardQueuePage() {
       </div>
 
       {/* Queue Table */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="font-bold text-sm text-neutral-900 dark:text-neutral-100">
+            <h3 className="font-medium text-sm text-neutral-900 dark:text-neutral-100">
               Active Queue
             </h3>
-            <Badge variant="secondary" className="text-xs px-2 py-0">
-              {jobs.length} {jobs.length === 1 ? "Order" : "Orders"}
+            <Badge variant="secondary" className="text-xs px-2 py-0 rounded-md font-normal">
+              {jobs.length} {jobs.length === 1 ? "order" : "orders"}
             </Badge>
           </div>
         </div>

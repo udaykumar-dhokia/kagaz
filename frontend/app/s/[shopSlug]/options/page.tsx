@@ -70,22 +70,22 @@ function OptionsContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: 
       {/* Navigation Header */}
       <div className="flex items-center justify-between">
         <Link href={`/s/${shopSlug}`}>
-          <Button variant="ghost" size="sm" className="text-xs -ml-2 text-neutral-600 dark:text-neutral-400">
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Back to Upload
+          <Button variant="ghost" size="sm" className="text-xs -ml-2 text-neutral-600 dark:text-neutral-400 h-8 rounded-lg">
+            <ArrowLeft className="h-3.5 w-3.5 mr-1" />
+            Back
           </Button>
         </Link>
-        <span className="text-xs font-semibold text-neutral-500 truncate max-w-[200px]">
+        <span className="text-xs font-medium text-neutral-500 truncate max-w-[200px]">
           {shopData.shop.name}
         </span>
       </div>
 
       <div className="text-center space-y-1">
-        <h1 className="text-2xl font-extrabold tracking-tight text-neutral-950 dark:text-neutral-50">
+        <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
           Print Specifications
         </h1>
         <p className="text-xs text-neutral-500">
-          Customize pages, color, and copies. The counter will print with these exact settings.
+          Customize pages, color, and copies.
         </p>
       </div>
 
