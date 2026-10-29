@@ -711,4 +711,88 @@ export async function updateLedgerPayment(
   return data;
 }
 
+export interface ShopBillingStatusResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    status: "TRIAL" | "ACTIVE" | "EXPIRED";
+    isTrialActive: boolean;
+    trialDaysRemaining: number;
+    trialEndsAt: string;
+    isSubscriptionActive: boolean;
+    subscriptionEndsAt: string | null;
+    canAccessPlatform: boolean;
+    currentPlan: string;
+    lastTransaction: {
+      id: string;
+      amount: string;
+      currency: string;
+      status: string;
+      planType: string;
+      createdAt: string;
+    } | null;
+  };
+}
+
+export async function fetchShopBillingStatus(token: string): Promise<ShopBillingStatusResponse> {
+  const res = await fetch(`${API_BASE}/shop/billing/status`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch billing status");
+  }
+  return data;
+}
+
+export interface DodoCheckoutResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    sessionId: string;
+    checkoutUrl: string;
+  };
+}
+
+export async function createDodoCheckoutSession(
+  token: string,
+  params?: { productId?: string; returnUrl?: string }
+): Promise<DodoCheckoutResponse> {
+  const res = await fetch(`${API_BASE}/shop/billing/checkout`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(params || {}),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to initiate payment checkout");
+  }
+  return data;
+}
+
+export async function verifyShopPayment(
+  token: string,
+  params?: { paymentId?: string; subscriptionId?: string }
+): Promise<ShopBillingStatusResponse> {
+  const res = await fetch(`${API_BASE}/shop/billing/verify`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(params || {}),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to verify payment status");
+  }
+  return data;
+}
+
+
+
 

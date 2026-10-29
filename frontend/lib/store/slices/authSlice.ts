@@ -5,6 +5,15 @@ export interface ShopData {
   id: string;
   name: string;
   slug: string;
+  subscription?: {
+    status: "TRIAL" | "ACTIVE" | "EXPIRED";
+    isTrialActive: boolean;
+    trialDaysRemaining: number;
+    trialEndsAt: string;
+    isSubscriptionActive: boolean;
+    subscriptionEndsAt: string | null;
+    canAccessPlatform: boolean;
+  };
 }
 
 export interface AuthState {

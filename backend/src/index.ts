@@ -11,6 +11,7 @@ import { jobsRoutes } from "./modules/jobs/jobs.routes";
 import { queueRoutes } from "./modules/queue/queue.routes";
 import { printRoutes } from "./modules/print/print.routes";
 import { ledgerRoutes } from "./modules/ledger/ledger.routes";
+import { billingRoutes, billingWebhookRoutes } from "./modules/billing/billing.routes";
 import { wsManager } from "./services/websocket.service";
 import { startCleanerSchedule } from "./services/cleaner.service";
 
@@ -92,6 +93,8 @@ app.route("/api/v1/jobs", jobsRoutes);
 app.route("/api/v1/shop/queue", queueRoutes);
 app.route("/api/v1/shop/print", printRoutes);
 app.route("/api/v1/shop/ledger", ledgerRoutes);
+app.route("/api/v1/shop/billing", billingRoutes);
+app.route("/api/v1/billing", billingWebhookRoutes);
 
 // Global 404 handler
 app.notFound((c) => {

@@ -6,6 +6,7 @@ import { shops, shopPrintSettings } from "../../db/schema";
 import { registerShopSchema, loginShopSchema } from "./auth.schema";
 import { generateShopSlug, generateQrToken } from "../../utils/slug";
 import { generateShopQr } from "../../services/qr.service";
+import { dodoService } from "../../services/dodo.service";
 import { createShopToken, requireShopAuth, type AppEnv } from "../../middlewares/auth.middleware";
 
 export const authRoutes = new Hono<AppEnv>();
@@ -55,7 +56,8 @@ authRoutes.post("/register", async (c) => {
     // Generate unique shop QR code asset
     const qrResult = await generateShopQr(slug);
 
-    // Create shop in database
+    // Create shop in database with 10-day free trial
+    const trialEndsAt = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000);
     const [createdShop] = await db
       .insert(shops)
       .values({
@@ -66,6 +68,8 @@ authRoutes.post("/register", async (c) => {
         passwordHash,
         qrCodeToken: qrToken,
         qrCodeDataUrl: qrResult.dataUrl,
+        trialEndsAt,
+        subscriptionStatus: "TRIAL",
       })
       .returning();
 
@@ -110,6 +114,7 @@ authRoutes.post("/register", async (c) => {
             phone: createdShop.ownerPhone,
             qrCodeUrl: qrResult.url,
             qrCodeDataUrl: qrResult.dataUrl,
+            subscription: dodoService.calculateTrialStatus(createdShop),
           },
           settings: createdSettings,
         },
@@ -154,6 +159,8 @@ authRoutes.post("/login", async (c) => {
       slug: shop.slug,
     });
 
+    const trialInfo = dodoService.calculateTrialStatus(shop);
+
     return c.json({
       success: true,
       message: "Login successful",
@@ -166,6 +173,7 @@ authRoutes.post("/login", async (c) => {
           email: shop.ownerEmail,
           phone: shop.ownerPhone,
           qrCodeDataUrl: shop.qrCodeDataUrl,
+          subscription: trialInfo,
         },
         settings,
       },
@@ -186,6 +194,7 @@ authRoutes.get("/me", requireShopAuth, async (c) => {
   }
 
   const [settings] = await db.select().from(shopPrintSettings).where(eq(shopPrintSettings.shopId, shopId));
+  const trialInfo = dodoService.calculateTrialStatus(shop);
 
   return c.json({
     success: true,
@@ -197,6 +206,7 @@ authRoutes.get("/me", requireShopAuth, async (c) => {
         email: shop.ownerEmail,
         phone: shop.ownerPhone,
         qrCodeDataUrl: shop.qrCodeDataUrl,
+        subscription: trialInfo,
       },
       settings,
     },

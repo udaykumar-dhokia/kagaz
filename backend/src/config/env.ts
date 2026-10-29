@@ -15,6 +15,12 @@ const envSchema = z.object({
 
   // Document retention in minutes (default 60 minutes)
   DOCUMENT_TTL_MINUTES: z.coerce.number().default(60),
+
+  // Dodo Payments Configuration
+  DODO_PAYMENTS_API_KEY: z.string().default("dodo_test_gsQo0q3zY4hgaa_g.KvpMyS7L8h67Rhti9ZnCb4M-An2s5vFRU-oeg8-We-YUgGef"),
+  DODO_PAYMENTS_ENV: z.enum(["test_mode", "live_mode"]).default("test_mode"),
+  DODO_PAYMENTS_WEBHOOK_SECRET: z.string().optional(),
+  DODO_PRODUCT_ID_MONTHLY: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);

@@ -36,6 +36,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { KagazLogo, KagazMark } from "@/components/ui/logo";
+import { SubscriptionHeaderPill } from "@/components/dashboard/subscription-banner";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { logout } from "@/lib/store/slices/authSlice";
@@ -259,6 +260,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           <div className="flex items-center gap-2">
+            <SubscriptionHeaderPill />
             <Button
               variant="outline"
               size="sm"

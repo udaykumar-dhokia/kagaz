@@ -10,6 +10,15 @@ export const shops = pgTable("shops", {
   qrCodeToken: varchar("qr_code_token", { length: 64 }).notNull().unique(),
   qrCodeDataUrl: text("qr_code_data_url"),
   isActive: boolean("is_active").default(true).notNull(),
+
+  // 10-Day Free Trial & Subscription (Dodo Payments)
+  trialEndsAt: timestamp("trial_ends_at"),
+  subscriptionStatus: varchar("subscription_status", { length: 32 }).default("TRIAL").notNull(), // 'TRIAL' | 'ACTIVE' | 'EXPIRED'
+  subscriptionEndsAt: timestamp("subscription_ends_at"),
+  dodoSubscriptionId: varchar("dodo_subscription_id", { length: 128 }),
+  dodoCustomerId: varchar("dodo_customer_id", { length: 128 }),
+  currentPlan: varchar("current_plan", { length: 64 }),
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

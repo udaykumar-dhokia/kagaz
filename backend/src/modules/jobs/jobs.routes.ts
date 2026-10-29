@@ -20,6 +20,7 @@ import { calculateOrderQuote } from "../../services/pricing.service";
 import { generateUniquePickupPin } from "../../utils/pin";
 import { maskPhoneNumber } from "../../utils/masking";
 import { wsManager } from "../../services/websocket.service";
+import { dodoService } from "../../services/dodo.service";
 
 export const jobsRoutes = new Hono();
 
@@ -39,12 +40,30 @@ jobsRoutes.post("/presigned-upload", async (c) => {
     const { shopSlug, filename, contentType } = parsed.data;
 
     const [shop] = await db
-      .select({ id: shops.id, isActive: shops.isActive })
+      .select({
+        id: shops.id,
+        isActive: shops.isActive,
+        createdAt: shops.createdAt,
+        trialEndsAt: shops.trialEndsAt,
+        subscriptionStatus: shops.subscriptionStatus,
+        subscriptionEndsAt: shops.subscriptionEndsAt,
+      })
       .from(shops)
       .where(eq(shops.slug, shopSlug));
 
     if (!shop || !shop.isActive) {
       return c.json({ success: false, message: "Shop not found or currently offline" }, 404);
+    }
+
+    const trialInfo = dodoService.calculateTrialStatus(shop);
+    if (!trialInfo.canAccessPlatform) {
+      return c.json(
+        {
+          success: false,
+          message: "This shop counter is currently paused pending subscription renewal. Please contact the counter operator.",
+        },
+        403
+      );
     }
 
     const result = await generatePresignedUploadUrl(shop.id, filename, contentType);
@@ -187,12 +206,31 @@ jobsRoutes.post("/", async (c) => {
 
     // 1. Verify shop exists & active
     const [shop] = await db
-      .select({ id: shops.id, name: shops.name, isActive: shops.isActive })
+      .select({
+        id: shops.id,
+        name: shops.name,
+        isActive: shops.isActive,
+        createdAt: shops.createdAt,
+        trialEndsAt: shops.trialEndsAt,
+        subscriptionStatus: shops.subscriptionStatus,
+        subscriptionEndsAt: shops.subscriptionEndsAt,
+      })
       .from(shops)
       .where(eq(shops.slug, shopSlug));
 
     if (!shop || !shop.isActive) {
       return c.json({ success: false, message: "Shop not found or currently offline" }, 404);
+    }
+
+    const trialInfo = dodoService.calculateTrialStatus(shop);
+    if (!trialInfo.canAccessPlatform) {
+      return c.json(
+        {
+          success: false,
+          message: "This shop counter is currently paused pending subscription renewal. Please contact the counter operator.",
+        },
+        403
+      );
     }
 
     // 2. Fetch catalog settings & addons
