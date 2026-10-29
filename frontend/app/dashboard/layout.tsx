@@ -14,6 +14,7 @@ import {
   ExternalLink,
   Store,
   ChevronRight,
+  CreditCard,
 } from "lucide-react";
 import {
   SidebarProvider,
@@ -78,6 +79,12 @@ function DashboardSidebarNav({
       href: "/dashboard/ledger",
       icon: BarChart3,
       active: pathname.startsWith("/dashboard/ledger"),
+    },
+    {
+      title: "Subscription",
+      href: "/dashboard/subscription",
+      icon: CreditCard,
+      active: pathname.startsWith("/dashboard/subscription"),
     },
   ];
 

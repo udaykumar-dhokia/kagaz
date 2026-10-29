@@ -290,7 +290,94 @@ billingRoutes.post("/verify", requireShopAuth, async (c) => {
 });
 
 // ==========================================
-// 4. Dodo Payments Webhook Receiver
+// 4. Get Subscription & Transaction History
+// ==========================================
+// GET /api/v1/shop/billing/history (Protected)
+billingRoutes.get("/history", requireShopAuth, async (c) => {
+  try {
+    const shopId = c.get("shopId");
+    const [shop] = await db.select().from(shops).where(eq(shops.id, shopId));
+
+    if (!shop) {
+      return c.json({ success: false, message: "Shop not found" }, 404);
+    }
+
+    // Query local transactions
+    let transactions = await db
+      .select({
+        id: subscriptionTransactions.id,
+        dodoPaymentId: subscriptionTransactions.dodoPaymentId,
+        amount: subscriptionTransactions.amount,
+        currency: subscriptionTransactions.currency,
+        status: subscriptionTransactions.status,
+        planType: subscriptionTransactions.planType,
+        createdAt: subscriptionTransactions.createdAt,
+      })
+      .from(subscriptionTransactions)
+      .where(eq(subscriptionTransactions.shopId, shopId))
+      .orderBy(desc(subscriptionTransactions.createdAt));
+
+    // If local list is empty, attempt to auto-reconcile from Dodo payments list
+    if (transactions.length === 0) {
+      try {
+        const recentPayments = await dodoService.listPayments(20);
+        const matchingPayments = recentPayments.filter(
+          (p: any) =>
+            (p.metadata?.shopId === shop.id ||
+              (p.customer?.email &&
+                p.customer.email.toLowerCase() === shop.ownerEmail.toLowerCase())) &&
+            (p.status === "succeeded" || p.status === "paid")
+        );
+
+        for (const payment of matchingPayments) {
+          await activateShopSubscription(shop.id, {
+            paymentId: payment.payment_id,
+            subscriptionId: payment.subscription_id,
+            customerId: payment.customer?.customer_id,
+            amount: payment.total_amount || payment.amount,
+            currency: payment.currency,
+            raw: payment,
+          });
+        }
+
+        // Re-query if newly inserted
+        if (matchingPayments.length > 0) {
+          transactions = await db
+            .select({
+              id: subscriptionTransactions.id,
+              dodoPaymentId: subscriptionTransactions.dodoPaymentId,
+              amount: subscriptionTransactions.amount,
+              currency: subscriptionTransactions.currency,
+              status: subscriptionTransactions.status,
+              planType: subscriptionTransactions.planType,
+              createdAt: subscriptionTransactions.createdAt,
+            })
+            .from(subscriptionTransactions)
+            .where(eq(subscriptionTransactions.shopId, shopId))
+            .orderBy(desc(subscriptionTransactions.createdAt));
+        }
+      } catch (err: any) {
+        console.warn("[Billing History] Auto-sync warning:", err?.message);
+      }
+    }
+
+    return c.json({
+      success: true,
+      data: {
+        transactions,
+      },
+    });
+  } catch (err: any) {
+    console.error("[Billing History] Error fetching transactions:", err);
+    return c.json(
+      { success: false, message: err?.message || "Failed to fetch transaction history" },
+      500
+    );
+  }
+});
+
+// ==========================================
+// 5. Dodo Payments Webhook Receiver
 // ==========================================
 // POST /api/v1/billing/webhook (Public with signature check)
 export const billingWebhookRoutes = new Hono();

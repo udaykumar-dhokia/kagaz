@@ -793,6 +793,39 @@ export async function verifyShopPayment(
   return data;
 }
 
+export interface SubscriptionTransactionItem {
+  id: string;
+  dodoPaymentId: string | null;
+  amount: string;
+  currency: string;
+  status: string;
+  planType: string;
+  createdAt: string;
+}
+
+export interface SubscriptionHistoryResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    transactions: SubscriptionTransactionItem[];
+  };
+}
+
+export async function fetchBillingHistory(
+  token: string
+): Promise<SubscriptionHistoryResponse> {
+  const res = await fetch(`${API_BASE}/shop/billing/history`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch transaction history");
+  }
+  return data;
+}
+
+
 
 
 
