@@ -1,6 +1,10 @@
 import type { Context, Next } from "hono";
 import { verify, sign } from "hono/jwt";
+import { eq } from "drizzle-orm";
+import { db } from "../db";
+import { shops } from "../db/schema";
 import { env } from "../config/env";
+import { dodoService } from "../services/dodo.service";
 
 export interface ShopTokenPayload {
   shopId: string;
@@ -41,4 +45,37 @@ export async function requireShopAuth(c: Context<AppEnv>, next: Next) {
     return c.json({ success: false, message: "Invalid or expired token" }, 401);
   }
 }
+
+export async function requireActiveCounter(c: Context<AppEnv>, next: Next) {
+  const shopId = c.get("shopId");
+  const [shop] = await db
+    .select({
+      id: shops.id,
+      createdAt: shops.createdAt,
+      trialEndsAt: shops.trialEndsAt,
+      subscriptionStatus: shops.subscriptionStatus,
+      subscriptionEndsAt: shops.subscriptionEndsAt,
+    })
+    .from(shops)
+    .where(eq(shops.id, shopId));
+
+  if (!shop) {
+    return c.json({ success: false, message: "Shop not found" }, 404);
+  }
+
+  const trialInfo = dodoService.calculateTrialStatus(shop);
+  if (!trialInfo.canAccessPlatform) {
+    return c.json(
+      {
+        success: false,
+        message: "Your 10-day free trial has expired. Please renew your subscription to access counter printing.",
+        isExpired: true,
+      },
+      403
+    );
+  }
+
+  await next();
+}
+
 

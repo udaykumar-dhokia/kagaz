@@ -5,6 +5,7 @@ import { db } from "../../db";
 import { shops, shopPrintSettings, shopAddons } from "../../db/schema";
 import { requireShopAuth, type AppEnv } from "../../middlewares/auth.middleware";
 import { generateShopQr } from "../../services/qr.service";
+import { dodoService } from "../../services/dodo.service";
 
 export const shopsRoutes = new Hono<AppEnv>();
 
@@ -21,12 +22,28 @@ shopsRoutes.get("/:slug/catalog", async (c) => {
       name: shops.name,
       slug: shops.slug,
       isActive: shops.isActive,
+      createdAt: shops.createdAt,
+      trialEndsAt: shops.trialEndsAt,
+      subscriptionStatus: shops.subscriptionStatus,
+      subscriptionEndsAt: shops.subscriptionEndsAt,
     })
     .from(shops)
     .where(eq(shops.slug, slug));
 
   if (!shop || !shop.isActive) {
     return c.json({ success: false, message: "Shop not found or currently offline" }, 404);
+  }
+
+  const trialInfo = dodoService.calculateTrialStatus(shop);
+  if (!trialInfo.canAccessPlatform) {
+    return c.json(
+      {
+        success: false,
+        message: "This shop counter is currently inactive pending renewal. Please check with the counter operator.",
+        isInactivePendingRenewal: true,
+      },
+      403
+    );
   }
 
   // Fetch capabilities & rates

@@ -13,6 +13,7 @@ export interface PendingDoc {
   pageCount: number;
   paperSize: string;
   sizeBytes: number;
+  previewUrl?: string;
 }
 
 export interface CustomerState {

@@ -140,6 +140,32 @@ jobsRoutes.post("/inspect-pdf", async (c) => {
 });
 
 // ==========================================
+// 3b. Stream Uploaded Document for Direct Preview
+// ==========================================
+// GET /api/v1/jobs/preview
+jobsRoutes.get("/preview", async (c) => {
+  const fileKey = c.req.query("fileKey");
+  if (!fileKey) {
+    return c.json({ success: false, message: "Missing fileKey query parameter" }, 400);
+  }
+
+  try {
+    const buffer = await getFileBuffer(fileKey);
+    return new Response(buffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": 'inline; filename="preview.pdf"',
+        "Cache-Control": "public, max-age=3600",
+      },
+    });
+  } catch (err: any) {
+    console.error("PDF preview error:", err);
+    return c.json({ success: false, message: err?.message || "Failed to load document preview" }, 404);
+  }
+});
+
+// ==========================================
 // 4. Calculate Order Quote
 // ==========================================
 // POST /api/v1/jobs/quote

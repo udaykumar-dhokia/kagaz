@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
-import { RefreshCw } from "lucide-react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { RefreshCw, AlertCircle } from "lucide-react";
 import { QuickPinBar } from "@/components/shop/quick-pin-bar";
 import { QueueTable } from "@/components/shop/queue-table";
 import { JobPrintModal } from "@/components/shop/job-print-modal";
@@ -11,6 +12,7 @@ import { toast } from "sonner";
 import { useShopSocket } from "@/hooks/use-socket";
 import { useAudioChime } from "@/hooks/use-sound";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { fetchShopBillingStatus } from "@/lib/api";
 import {
   fetchQueue,
   searchQueuePin,
@@ -23,9 +25,11 @@ import {
 } from "@/lib/store/slices/queueSlice";
 
 export default function DashboardQueuePage() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const token = useAppSelector((state) => state.auth.token);
+  const [isCounterExpired, setIsCounterExpired] = useState(false);
   const {
     jobs,
     selectedJob,
@@ -40,6 +44,16 @@ export default function DashboardQueuePage() {
   const loadQueue = useCallback(() => {
     if (token) {
       dispatch(fetchQueue(token));
+      fetchShopBillingStatus(token)
+        .then((res) => {
+          if (res.success && res.data) {
+            setIsCounterExpired(
+              res.data.status === "EXPIRED" ||
+                (!res.data.canAccessPlatform && !res.data.isTrialActive)
+            );
+          }
+        })
+        .catch(() => {});
     }
   }, [token, dispatch]);
 
@@ -97,6 +111,35 @@ export default function DashboardQueuePage() {
 
   return (
     <div className="space-y-5">
+      {/* Inactive Counter Alert Banner */}
+      {isCounterExpired && (
+        <div className="p-4 sm:p-5 rounded-xl border border-neutral-300 dark:border-neutral-800 bg-neutral-100/70 dark:bg-neutral-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="h-8 w-8 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center shrink-0 mt-0.5">
+              <AlertCircle className="h-4 w-4 text-neutral-800 dark:text-neutral-200" />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                Counter Terminal Inactive
+              </h2>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                Your 10-day free trial has expired. Customer uploads and printer dispatch are paused
+                until you renew your subscription.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <Button
+              size="sm"
+              onClick={() => router.push("/dashboard/subscription")}
+              className="text-xs font-semibold bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 h-8 px-3 rounded-lg"
+            >
+              Renew Subscription
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner: Keyboard-First Search Bar */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { requestPresignedUpload, uploadFileWithProgress, inspectUploadedPdf } from "@/lib/api";
+import { requestPresignedUpload, uploadFileWithProgress, inspectUploadedPdf, getDocumentPreviewUrl } from "@/lib/api";
 
 export interface UploadedDocument {
   fileKey: string;
@@ -14,6 +14,7 @@ export interface UploadedDocument {
   sizeBytes: number;
   pageCount: number;
   paperSize: string;
+  previewUrl?: string;
 }
 
 interface FileDropzoneProps {
@@ -85,12 +86,15 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
         return;
       }
 
+      const localPreviewUrl = URL.createObjectURL(file);
+
       const docData: UploadedDocument = {
         fileKey,
         filename: file.name,
         sizeBytes: file.size,
         pageCount: inspectionRes.data.pageCount,
         paperSize: inspectionRes.data.detectedPaperSize,
+        previewUrl: localPreviewUrl,
       };
 
       setCurrentDoc(docData);
@@ -104,6 +108,11 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
   };
 
   const handleRemove = () => {
+    if (currentDoc?.previewUrl && currentDoc.previewUrl.startsWith("blob:")) {
+      try {
+        URL.revokeObjectURL(currentDoc.previewUrl);
+      } catch {}
+    }
     setCurrentDoc(null);
     setUploadStatus("idle");
     setUploadProgress(0);
@@ -181,24 +190,25 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
       )}
 
       {uploadStatus === "ready" && currentDoc && (
-        <Card className="border border-neutral-200 dark:border-neutral-800 bg-neutral-50/40 dark:bg-neutral-950/40 p-4 sm:p-5 shadow-xs">
-          <div className="flex items-center justify-between gap-3">
+        <Card className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden rounded-2xl">
+          {/* Document Header Bar */}
+          <div className="p-3.5 sm:p-4 border-b border-neutral-100 dark:border-neutral-800 flex items-center justify-between gap-3 bg-neutral-50/70 dark:bg-neutral-950/50">
             <div className="flex items-center gap-3 overflow-hidden">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                <FileText className="h-6 w-6" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
+                <FileText className="h-4 w-4" />
               </div>
               <div className="overflow-hidden">
-                <p className="font-medium text-sm text-neutral-900 dark:text-neutral-100 truncate">
+                <p className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 truncate">
                   {currentDoc.filename}
                 </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="secondary" className="text-xs font-semibold px-2 py-0.5">
+                <div className="flex items-center gap-2 mt-0.5">
+                  <Badge variant="secondary" className="text-[11px] font-medium px-2 py-0 rounded">
                     {currentDoc.pageCount} {currentDoc.pageCount === 1 ? "page" : "pages"}
                   </Badge>
-                  <Badge variant="outline" className="text-xs px-2 py-0.5">
+                  <Badge variant="outline" className="text-[11px] px-2 py-0 rounded text-neutral-600 dark:text-neutral-400">
                     {currentDoc.paperSize}
                   </Badge>
-                  <span className="text-xs text-neutral-500">
+                  <span className="text-[11px] text-neutral-500">
                     {(currentDoc.sizeBytes / (1024 * 1024)).toFixed(1)} MB
                   </span>
                 </div>
@@ -207,13 +217,29 @@ export function FileDropzone({ shopSlug, onDocumentReady, onReset }: FileDropzon
 
             <Button
               variant="ghost"
-              size="icon"
+              size="sm"
               onClick={handleRemove}
-              className="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
-              title="Remove document"
+              className="h-8 px-2.5 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 rounded-lg gap-1"
+              title="Change document"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Change</span>
             </Button>
+          </div>
+
+          {/* Direct Document Preview */}
+          <div className="relative w-full h-[380px] sm:h-[480px] bg-neutral-100/60 dark:bg-neutral-950 flex flex-col items-center justify-center overflow-hidden">
+            <iframe
+              src={`${currentDoc.previewUrl || getDocumentPreviewUrl(currentDoc.fileKey)}#toolbar=0&navpanes=0&view=FitH`}
+              className="w-full h-full border-0 bg-white dark:bg-neutral-900"
+              title={currentDoc.filename}
+            />
+          </div>
+
+          {/* Footer Status Bar */}
+          <div className="px-4 py-2 bg-neutral-50/50 dark:bg-neutral-950/40 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-500">
+            <span>Direct Document Preview</span>
+            <span>{currentDoc.pageCount} {currentDoc.pageCount === 1 ? "page" : "pages"} loaded</span>
           </div>
         </Card>
       )}

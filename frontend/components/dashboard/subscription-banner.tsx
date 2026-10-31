@@ -182,13 +182,13 @@ export function SubscriptionHeaderPill() {
             className="h-7 px-2.5 text-xs font-semibold border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 rounded-lg gap-1.5 hover:bg-neutral-200"
           >
             <AlertCircle className="h-3.5 w-3.5 text-neutral-700 dark:text-neutral-300" />
-            Trial Expired · Renew
+            Expired · Renew
           </Button>
         )}
       </div>
 
       {/* Subscription Modal */}
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+      <Dialog open={modalOpen && !isActive} onOpenChange={setModalOpen}>
         <DialogContent className="max-w-md bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6">
           <DialogHeader className="text-left space-y-2">
             <div className="flex items-center gap-2">

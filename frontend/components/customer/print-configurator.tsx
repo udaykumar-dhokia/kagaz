@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { submitPrintOrder, type CreateOrderResponse, type ShopCatalogResponse } from "@/lib/api";
+import { submitPrintOrder, getDocumentPreviewUrl, type CreateOrderResponse, type ShopCatalogResponse } from "@/lib/api";
 import type { UploadedDocument } from "./file-dropzone";
 
 interface PrintConfiguratorProps {
@@ -169,26 +169,34 @@ export function PrintConfigurator({ shopSlug, doc, catalog, onOrderCreated }: Pr
 
   return (
     <div className="w-full space-y-6">
-      {/* File Summary Card */}
-      <Card className="border border-neutral-200 dark:border-neutral-800 shadow-2xs">
-        <CardContent className="p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 overflow-hidden">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
-              <FileText className="h-5 w-5" />
+      {/* Direct Document Preview Card */}
+      <Card className="border border-neutral-200 dark:border-neutral-800 shadow-xs overflow-hidden rounded-xl">
+        <CardContent className="p-3.5 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-950/40">
+          <div className="flex items-center gap-2.5 overflow-hidden">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
+              <FileText className="h-4 w-4" />
             </div>
             <div className="overflow-hidden">
-              <p className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 truncate">
+              <p className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 truncate">
                 {doc.filename}
               </p>
-              <p className="text-xs text-neutral-500">
+              <p className="text-[11px] text-neutral-500">
                 {doc.pageCount} total pages • {doc.paperSize}
               </p>
             </div>
           </div>
-          <Badge variant="secondary" className="text-xs">
-            Ready
+          <Badge variant="secondary" className="text-xs font-normal">
+            Ready to Print
           </Badge>
         </CardContent>
+
+        <div className="w-full h-[280px] sm:h-[340px] bg-neutral-100/60 dark:bg-neutral-950 overflow-hidden">
+          <iframe
+            src={`${doc.previewUrl || getDocumentPreviewUrl(doc.fileKey)}#toolbar=0&navpanes=0&view=FitH`}
+            className="w-full h-full border-0 bg-white dark:bg-neutral-900"
+            title={doc.filename}
+          />
+        </div>
       </Card>
 
       {/* Print Options */}

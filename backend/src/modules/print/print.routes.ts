@@ -3,15 +3,16 @@ import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "../../db";
 import { printJobs, printJobItems } from "../../db/schema";
-import { requireShopAuth, type AppEnv } from "../../middlewares/auth.middleware";
+import { requireShopAuth, requireActiveCounter, type AppEnv } from "../../middlewares/auth.middleware";
 import { getFileBuffer } from "../../services/storage.service";
 import { wsManager } from "../../services/websocket.service";
 import { env } from "../../config/env";
 
 export const printRoutes = new Hono<AppEnv>();
 
-// Protect all print routes with shop authentication
+// Protect all print routes with shop authentication and active counter status
 printRoutes.use("*", requireShopAuth);
+printRoutes.use("*", requireActiveCounter);
 
 // ==========================================
 // 1. In-Memory Print Stream (Zero-Disk-Download)

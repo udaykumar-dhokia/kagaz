@@ -122,9 +122,11 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 mb-3">
           <Store className="h-6 w-6" />
         </div>
-        <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">Shop not found</h2>
+        <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
+          {error?.toLowerCase().includes("inactive") ? "Counter Inactive" : "Shop Not Found"}
+        </h2>
         <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 mb-5">
-          {error || "This print shop is currently not active or the qr code has expired."}
+          {error || "This print shop is currently not active or the QR code has expired."}
         </p>
         <Button onClick={() => window.location.reload()} variant="outline" className="w-full h-9 rounded-lg text-xs font-medium">
           Refresh & try again

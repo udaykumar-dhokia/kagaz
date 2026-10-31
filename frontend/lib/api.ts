@@ -229,6 +229,10 @@ export async function inspectUploadedPdf(fileKey: string): Promise<PdfInspection
   return res.json();
 }
 
+export function getDocumentPreviewUrl(fileKey: string): string {
+  return `${API_BASE}/jobs/preview?fileKey=${encodeURIComponent(fileKey)}`;
+}
+
 export async function fetchOrderQuote(
   shopSlug: string,
   items: QuoteRequestItem[],

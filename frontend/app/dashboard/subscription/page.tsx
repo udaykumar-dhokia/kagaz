@@ -205,7 +205,9 @@ export default function SubscriptionPage() {
             Subscription & Billing
           </h1>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-            Manage your counter subscription, renew access, and review payment history.
+            {isActive
+              ? "Review your counter subscription details and payment history."
+              : "Manage your counter subscription, renew access, and review payment history."}
           </p>
         </div>
 
@@ -221,16 +223,44 @@ export default function SubscriptionPage() {
             Check Status
           </Button>
 
+          {!isActive && (
+            <Button
+              size="sm"
+              onClick={() => setModalOpen(true)}
+              className="h-8 px-3 text-xs font-semibold bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:text-neutral-900 rounded-lg gap-1.5"
+            >
+              <CreditCard className="h-3.5 w-3.5" />
+              Renew Subscription
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Inactive Alert Banner if expired */}
+      {isExpired && (
+        <div className="p-4 sm:p-5 rounded-xl border border-neutral-300 dark:border-neutral-800 bg-neutral-100/70 dark:bg-neutral-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="h-8 w-8 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center shrink-0 mt-0.5">
+              <AlertCircle className="h-4 w-4 text-neutral-800 dark:text-neutral-200" />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                Subscription Inactive
+              </h2>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                Your counter access is currently paused. Renew your subscription to resume customer print orders.
+              </p>
+            </div>
+          </div>
           <Button
             size="sm"
             onClick={() => setModalOpen(true)}
-            className="h-8 px-3 text-xs font-semibold bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:text-neutral-900 rounded-lg gap-1.5"
+            className="text-xs font-semibold bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 h-8 px-3 rounded-lg"
           >
-            <CreditCard className="h-3.5 w-3.5" />
             Renew Subscription
           </Button>
         </div>
-      </div>
+      )}
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -474,7 +504,7 @@ export default function SubscriptionPage() {
       </Card>
 
       {/* Renewal Dialog Modal */}
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+      <Dialog open={modalOpen && !isActive} onOpenChange={setModalOpen}>
         <DialogContent className="max-w-md bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6">
           <DialogHeader className="text-left space-y-2">
             <div className="flex items-center gap-2">
