@@ -147,8 +147,8 @@ export function JobPrintModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md p-5 sm:p-6 rounded-xl border border-neutral-200 dark:border-neutral-800">
-        <DialogHeader className="space-y-1 pb-2 pr-8">
+      <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-lg p-5 sm:p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 flex flex-col gap-3.5 max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="space-y-1 pb-1 pr-8 min-w-0">
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="font-mono text-xs px-2 py-0.5 font-medium rounded-md">
               PIN: {job.pickupPin}
@@ -169,45 +169,48 @@ export function JobPrintModal({
         </DialogHeader>
 
         {/* Specifications Cards */}
-        <div className="space-y-2.5 py-1">
+        <div className="space-y-3 py-1 min-w-0 w-full">
           {job.items.map((it, idx) => (
             <div
               key={it.id || idx}
-              className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2"
+              className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40 space-y-2.5 min-w-0 w-full"
             >
-              <div className="flex items-center gap-2 overflow-hidden">
+              <div className="flex items-center gap-2 min-w-0 w-full overflow-hidden">
                 <FileText className="h-4 w-4 shrink-0 text-neutral-500 dark:text-neutral-400" />
-                <span className="font-medium text-xs text-neutral-900 dark:text-neutral-100 truncate">
+                <span
+                  className="font-medium text-xs text-neutral-900 dark:text-neutral-100 truncate min-w-0 flex-1 block"
+                  title={it.originalFilename}
+                >
                   {it.originalFilename}
                 </span>
               </div>
 
               {/* Specs Badges */}
-              <div className="flex flex-wrap gap-1.5 text-xs">
-                <Badge variant="secondary" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300">
+              <div className="flex flex-wrap items-center gap-1.5 text-xs min-w-0 w-full">
+                <Badge variant="secondary" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 shrink-0">
                   {it.pageCount} {it.pageCount === 1 ? "page" : "pages"}
                   {it.pageRange !== "all" && ` (${it.pageRange})`}
                 </Badge>
 
                 <Badge
                   variant="outline"
-                  className="rounded-md text-[11px] font-normal text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800"
+                  className="rounded-md text-[11px] font-normal text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800 shrink-0"
                 >
                   <Palette className="h-3 w-3 mr-1 inline text-neutral-500" />
                   {it.colorMode === "COLOR" ? "Color" : "B&W"}
                 </Badge>
 
-                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800">
+                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800 shrink-0">
                   <Layers className="h-3 w-3 mr-1 inline text-neutral-500" />
                   {it.isDuplex ? "Double-Sided" : "Single-Sided"}
                 </Badge>
 
-                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800">
+                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800 shrink-0">
                   <Copy className="h-3 w-3 mr-1 inline text-neutral-500" />
                   {it.copies} {it.copies > 1 ? "Copies" : "Copy"}
                 </Badge>
 
-                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800">
+                <Badge variant="outline" className="rounded-md font-normal text-[11px] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800 shrink-0">
                   {it.paperSize}
                 </Badge>
               </div>
@@ -215,19 +218,19 @@ export function JobPrintModal({
           ))}
 
           {/* Amount Banner */}
-          <div className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between">
+          <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between min-w-0 w-full">
             <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
               Total:
             </span>
-            <span className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+            <span className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
               ₹{job.totalAmount}
             </span>
           </div>
 
           {/* Payment Method Toggle */}
-          <div className="flex items-center justify-between text-xs pt-0.5">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs pt-0.5 min-w-0 w-full">
             <span className="text-neutral-500 font-normal">Payment:</span>
-            <div className="flex gap-1.5">
+            <div className="flex gap-1.5 shrink-0">
               <Button
                 type="button"
                 size="sm"
@@ -250,10 +253,10 @@ export function JobPrintModal({
           </div>
         </div>
 
-        <Separator className="bg-neutral-200 dark:bg-neutral-800 my-1" />
+        <Separator className="bg-neutral-200 dark:border-neutral-800 my-0.5" />
 
         {/* Action Buttons */}
-        <DialogFooter className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2">
+        <DialogFooter className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-1 min-w-0 w-full">
           <Button
             type="button"
             variant="ghost"
@@ -266,9 +269,10 @@ export function JobPrintModal({
 
           <Button
             type="button"
+            variant="outline"
             onClick={handleTriggerBrowserPrint}
             disabled={isPrinting}
-            className="h-9 px-4 rounded-lg text-xs font-medium bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs"
+            className="h-9 px-4 rounded-lg text-xs font-semibold gap-1.5"
           >
             <Printer className="h-4 w-4 mr-1.5" />
             {isPrinting ? "Printing..." : "Print"}
@@ -278,7 +282,7 @@ export function JobPrintModal({
             type="button"
             onClick={handleMarkCompleted}
             disabled={isCompleting}
-            className="h-9 px-4 rounded-lg text-xs font-medium bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 shadow-xs"
+            className="h-9 px-4 rounded-lg text-xs font-semibold gap-1.5 shadow-2xs"
           >
             <CheckCircle2 className="h-4 w-4 mr-1.5" />
             {isCompleting ? "Saving..." : "Complete"}

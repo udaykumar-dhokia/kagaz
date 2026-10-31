@@ -220,7 +220,7 @@ export default function SubscriptionPage() {
             <Button
               size="sm"
               onClick={() => setModalOpen(true)}
-              className="h-8 px-3 text-xs font-semibold bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:text-neutral-900 rounded-lg gap-1.5"
+              className="h-8 px-3 text-xs font-semibold rounded-lg gap-1.5 shadow-2xs"
             >
               <CreditCard className="h-3.5 w-3.5" />
               Renew Subscription
@@ -248,7 +248,7 @@ export default function SubscriptionPage() {
           <Button
             size="sm"
             onClick={() => setModalOpen(true)}
-            className="text-xs font-semibold bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 h-8 px-3 rounded-lg"
+            className="text-xs font-semibold h-8 px-3 rounded-lg shadow-2xs"
           >
             Renew Subscription
           </Button>

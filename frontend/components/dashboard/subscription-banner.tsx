@@ -121,12 +121,11 @@ export function SubscriptionHeaderPill() {
 
         {isExpired && (
           <Button
-            variant="outline"
             size="sm"
             onClick={() => setModalOpen(true)}
-            className="h-7 px-2.5 text-xs font-semibold border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 rounded-lg gap-1.5 hover:bg-neutral-200"
+            className="h-7 px-2.5 text-xs font-semibold rounded-lg gap-1.5 shadow-2xs"
           >
-            <AlertCircle className="h-3.5 w-3.5 text-neutral-700 dark:text-neutral-300" />
+            <AlertCircle className="h-3.5 w-3.5" />
             Expired · Renew
           </Button>
         )}

@@ -78,7 +78,7 @@ export function SubscriptionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6">
+      <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-md bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-left space-y-2">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center border border-neutral-200 dark:border-neutral-800">
@@ -165,7 +165,7 @@ export function SubscriptionDialog({
           <Button
             onClick={handleStartCheckout}
             disabled={checkoutLoading}
-            className="flex-1 text-xs h-9 font-semibold bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:text-neutral-900 rounded-lg gap-1.5"
+            className="flex-1 text-xs h-9 font-semibold rounded-lg gap-1.5 shadow-2xs"
           >
             {checkoutLoading ? (
               <>

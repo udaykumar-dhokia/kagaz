@@ -132,7 +132,7 @@ export default function DashboardQueuePage() {
             <Button
               size="sm"
               onClick={() => router.push("/dashboard/subscription")}
-              className="text-xs font-semibold bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 h-8 px-3 rounded-lg"
+              className="text-xs font-semibold h-8 px-3 rounded-lg shadow-2xs"
             >
               Renew Subscription
             </Button>
