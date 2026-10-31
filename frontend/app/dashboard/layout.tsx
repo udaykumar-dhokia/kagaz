@@ -59,31 +59,31 @@ function DashboardSidebarNav({
 
   const navItems = [
     {
-      title: "Live Counter Queue",
+      title: "Queue",
       href: "/dashboard",
       icon: Printer,
       active: pathname === "/dashboard",
     },
     {
-      title: "Shop Settings",
+      title: "Settings",
       href: "/dashboard/settings",
       icon: SlidersHorizontal,
       active: pathname.startsWith("/dashboard/settings"),
     },
     {
-      title: "Counter Standee QR",
+      title: "Shop QR",
       href: "/dashboard/standee",
       icon: QrCode,
       active: pathname.startsWith("/dashboard/standee"),
     },
     {
-      title: "Daily Ledger & Reports",
+      title: "Analytics & Reports",
       href: "/dashboard/ledger",
       icon: BarChart3,
       active: pathname.startsWith("/dashboard/ledger"),
     },
     {
-      title: "Subscription",
+      title: "Subscriptions",
       href: "/dashboard/subscription",
       icon: CreditCard,
       active: pathname.startsWith("/dashboard/subscription"),
@@ -280,7 +280,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <header className="h-14 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md px-4 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center gap-3">
             <SidebarTrigger className="h-8 w-8 text-neutral-600 rounded-lg" />
-            <Separator orientation="vertical" className="h-4 bg-neutral-200 dark:border-neutral-800" />
+            <Separator orientation="vertical" className="bg-neutral-200 dark:border-neutral-800" />
             <div className="flex items-center gap-2">
               <img
                 src={getShopAvatarUrl(shopData?.name, shopData?.logoUrl)}

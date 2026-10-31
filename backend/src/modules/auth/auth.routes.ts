@@ -32,7 +32,10 @@ authRoutes.post("/register", async (c) => {
       email,
       phone,
       password,
+      address,
+      upiId,
       isColorEnabled,
+      isDuplexEnabled,
       bwSinglePrice,
       bwDoublePrice,
       colorSinglePrice,
@@ -65,6 +68,8 @@ authRoutes.post("/register", async (c) => {
         slug,
         ownerEmail: email.toLowerCase(),
         ownerPhone: phone || null,
+        address: address ? address.trim() : null,
+        upiId: upiId ? upiId.trim() : null,
         passwordHash,
         qrCodeToken: qrToken,
         qrCodeDataUrl: qrResult.dataUrl,
@@ -88,7 +93,7 @@ authRoutes.post("/register", async (c) => {
         isColorEnabled,
         colorSinglePrice: colorSinglePrice.toFixed(2),
         colorDoublePrice: colorDoublePrice.toFixed(2),
-        isDuplexEnabled: true,
+        isDuplexEnabled: isDuplexEnabled ?? true,
         supportedPaperSizes: ["A4", "LEGAL"],
       })
       .returning();

@@ -13,7 +13,6 @@ import {
   Loader2,
   Receipt,
   Calendar,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,13 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useAppSelector } from "@/lib/store/hooks";
 import {
@@ -43,6 +35,7 @@ import {
   type ShopBillingStatusResponse,
   type SubscriptionTransactionItem,
 } from "@/lib/api";
+import { SubscriptionDialog } from "@/components/dashboard/subscription-dialog";
 
 export default function SubscriptionPage() {
   const token = useAppSelector((state) => state.auth.token);
@@ -504,111 +497,11 @@ export default function SubscriptionPage() {
       </Card>
 
       {/* Renewal Dialog Modal */}
-      <Dialog open={modalOpen && !isActive} onOpenChange={setModalOpen}>
-        <DialogContent className="max-w-md bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6">
-          <DialogHeader className="text-left space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center border border-neutral-200 dark:border-neutral-800">
-                <Sparkles className="h-4 w-4 text-neutral-900 dark:text-neutral-100" />
-              </div>
-              <DialogTitle className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                Counter Subscription
-              </DialogTitle>
-            </div>
-            <DialogDescription className="text-xs text-neutral-500 leading-relaxed">
-              Accept customer QR orders, dispatch prints to your counter terminals, and
-              track daily ledger records.
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* Pricing Box */}
-          <div className="mt-4 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-medium text-neutral-500">Monthly Plan</p>
-              <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-                  ₹399
-                </span>
-                <span className="text-xs text-neutral-500">/ month</span>
-              </div>
-              <p className="text-[11px] text-neutral-400 mt-0.5">Inclusive of taxes · Cancel anytime</p>
-            </div>
-          </div>
-
-          {/* Included Features */}
-          <div className="mt-4 space-y-2.5">
-            {[
-              "Unlimited Customer QR Print Orders",
-              "Zero WhatsApp Number Sharing & File Clutter",
-              "Real-Time Counter Queue & Local Print Dispatch",
-              "Daily Ledger, Cash vs. UPI Tracking & CSV Export",
-              "UPI Payments via PhonePe, GPay, Paytm & Cards",
-            ].map((feature, idx) => (
-              <div key={idx} className="flex items-center gap-2.5 text-xs text-neutral-700 dark:text-neutral-300">
-                <div className="h-4 w-4 rounded-full bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center shrink-0 border border-neutral-300 dark:border-neutral-700">
-                  <Check className="h-2.5 w-2.5 text-neutral-900 dark:text-neutral-100" />
-                </div>
-                <span>{feature}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Security Notice */}
-          <div className="mt-4 pt-3 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between text-[11px] text-neutral-400">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5 text-neutral-500" />
-              Secure 256-Bit Payment Gateway
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSync}
-              disabled={syncing}
-              className="h-6 px-1.5 text-[11px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 rounded"
-            >
-              {syncing ? (
-                <>
-                  <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                  Checking...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="h-3 w-3 mr-1" />
-                  Check Status
-                </>
-              )}
-            </Button>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="mt-4 flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setModalOpen(false)}
-              className="flex-1 text-xs h-9 rounded-lg border-neutral-200 dark:border-neutral-800"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleStartCheckout}
-              disabled={checkoutLoading}
-              className="flex-1 text-xs h-9 font-semibold bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:text-neutral-900 rounded-lg gap-1.5"
-            >
-              {checkoutLoading ? (
-                <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  Connecting...
-                </>
-              ) : (
-                <>
-                  Proceed to Pay
-                  <ExternalLink className="h-3.5 w-3.5 ml-0.5" />
-                </>
-              )}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SubscriptionDialog
+        open={modalOpen && !isActive}
+        onOpenChange={setModalOpen}
+        onSuccess={loadData}
+      />
     </div>
   );
 }

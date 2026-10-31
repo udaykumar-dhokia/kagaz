@@ -324,7 +324,10 @@ export async function registerShop(payload: {
   email: string;
   phone?: string;
   password: string;
+  address?: string;
+  upiId?: string;
   isColorEnabled?: boolean;
+  isDuplexEnabled?: boolean;
   bwSinglePrice?: number;
   bwDoublePrice?: number;
   colorSinglePrice?: number;
