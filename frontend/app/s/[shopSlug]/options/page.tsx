@@ -9,6 +9,7 @@ import { PrintConfigurator } from "@/components/customer/print-configurator";
 import type { UploadedDocument } from "@/components/customer/file-dropzone";
 import { Button } from "@/components/ui/button";
 import { KagazLogo } from "@/components/ui/logo";
+import { getShopAvatarUrl } from "@/lib/avatar";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
@@ -78,9 +79,16 @@ function OptionsContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: 
             Back
           </Button>
         </Link>
-        <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 truncate max-w-[200px]">
-          {shopData.shop.name}
-        </span>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <img
+            src={getShopAvatarUrl(shopData.shop.name, shopData.shop.logoUrl)}
+            alt={shopData.shop.name}
+            className="h-5 w-5 rounded-md object-cover border border-neutral-200 dark:border-neutral-800 shrink-0"
+          />
+          <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 truncate max-w-[180px]">
+            {shopData.shop.name}
+          </span>
+        </div>
       </div>
 
       <div className="text-center space-y-1">

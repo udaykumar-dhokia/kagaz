@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { KagazLogo } from "@/components/ui/logo";
+import { getShopAvatarUrl } from "@/lib/avatar";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   loadShopCatalog,
@@ -139,11 +140,21 @@ function ShopContent({ paramsPromise }: { paramsPromise: Promise<{ shopSlug: str
 
   return (
     <div className="w-full max-w-lg space-y-6">
-      {/* Top Shop Header - Only Shop Name */}
+      {/* Top Shop Header - Logo & Shop Name */}
       <div className="flex flex-col items-center text-center pt-2">
+        <img
+          src={getShopAvatarUrl(shop.name, shop.logoUrl)}
+          alt={shop.name}
+          className="h-16 w-16 rounded-2xl object-cover border border-neutral-200 dark:border-neutral-800 shadow-2xs mb-2.5"
+        />
         <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
           {shop.name}
         </h1>
+        {shop.address && (
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 max-w-sm">
+            {shop.address}
+          </p>
+        )}
       </div>
 
       {/* ACTIVE TICKET RECOVERY BANNER */}

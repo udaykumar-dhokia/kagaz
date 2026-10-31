@@ -5,6 +5,12 @@ export interface ShopData {
   id: string;
   name: string;
   slug: string;
+  ownerEmail?: string;
+  ownerPhone?: string | null;
+  address?: string | null;
+  upiId?: string | null;
+  logoUrl?: string | null;
+  avatarUrl?: string;
   subscription?: {
     status: "TRIAL" | "ACTIVE" | "EXPIRED";
     isTrialActive: boolean;
@@ -129,6 +135,14 @@ export const authSlice = createSlice({
     clearAuthError: (state) => {
       state.error = null;
     },
+    updateShopData: (state, action: PayloadAction<Partial<ShopData>>) => {
+      if (state.shop) {
+        state.shop = { ...state.shop, ...action.payload };
+        if (typeof window !== "undefined") {
+          localStorage.setItem("kagaz_shop_data", JSON.stringify(state.shop));
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -181,7 +195,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { restoreSession, setCredentials, logout, clearAuthError } =
+export const { restoreSession, setCredentials, logout, clearAuthError, updateShopData } =
   authSlice.actions;
 export default authSlice.reducer;
 

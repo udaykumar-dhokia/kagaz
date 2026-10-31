@@ -38,9 +38,11 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { KagazLogo, KagazMark } from "@/components/ui/logo";
 import { SubscriptionHeaderPill } from "@/components/dashboard/subscription-banner";
+import { getShopAvatarUrl } from "@/lib/avatar";
+import { fetchShopProfile } from "@/lib/api";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { logout } from "@/lib/store/slices/authSlice";
+import { logout, updateShopData } from "@/lib/store/slices/authSlice";
 import { toggleAudioMute } from "@/lib/store/slices/queueSlice";
 
 function DashboardSidebarNav({
@@ -63,7 +65,7 @@ function DashboardSidebarNav({
       active: pathname === "/dashboard",
     },
     {
-      title: "Services & Rates",
+      title: "Shop Settings",
       href: "/dashboard/settings",
       icon: SlidersHorizontal,
       active: pathname.startsWith("/dashboard/settings"),
@@ -101,11 +103,19 @@ function DashboardSidebarNav({
       >
         {isCollapsed ? (
           <div className="flex items-center justify-center">
-            <KagazMark className="h-7 w-7" />
+            <img
+              src={getShopAvatarUrl(shopData?.name, shopData?.logoUrl)}
+              alt={shopData?.name || "Shop Logo"}
+              className="h-7 w-7 rounded-lg object-cover border border-neutral-200 dark:border-neutral-800"
+            />
           </div>
         ) : (
           <div className="flex items-center gap-2.5 overflow-hidden min-w-0 flex-1">
-            <KagazMark className="h-7 w-7 shrink-0" />
+            <img
+              src={getShopAvatarUrl(shopData?.name, shopData?.logoUrl)}
+              alt={shopData?.name || "Shop Logo"}
+              className="h-7 w-7 rounded-lg object-cover border border-neutral-200 dark:border-neutral-800 shrink-0"
+            />
             <h3 className="font-semibold text-sm tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
               {shopData?.name || "Kagaz Counter"}
             </h3>
@@ -216,7 +226,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const dispatch = useAppDispatch();
   const [mounted, setMounted] = useState(false);
 
-  const { shop: shopData, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { shop: shopData, isAuthenticated, token } = useAppSelector((state) => state.auth);
   const isAudioMuted = useAppSelector((state) => state.queue.isAudioMuted);
 
   useEffect(() => {
@@ -228,6 +238,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.replace("/login");
     }
   }, [mounted, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (token) {
+      fetchShopProfile(token)
+        .then((res) => {
+          dispatch(updateShopData(res.data));
+        })
+        .catch(() => {});
+    }
+  }, [token, dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -261,9 +281,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-3">
             <SidebarTrigger className="h-8 w-8 text-neutral-600 rounded-lg" />
             <Separator orientation="vertical" className="h-4 bg-neutral-200 dark:border-neutral-800" />
-            <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-              {shopData?.name}
-            </span>
+            <div className="flex items-center gap-2">
+              <img
+                src={getShopAvatarUrl(shopData?.name, shopData?.logoUrl)}
+                alt={shopData?.name || "Shop Logo"}
+                className="h-6 w-6 rounded-md object-cover border border-neutral-200 dark:border-neutral-800"
+              />
+              <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                {shopData?.name}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">

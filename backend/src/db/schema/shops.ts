@@ -11,6 +11,11 @@ export const shops = pgTable("shops", {
   qrCodeDataUrl: text("qr_code_data_url"),
   isActive: boolean("is_active").default(true).notNull(),
 
+  // Shop Profile Details
+  logoUrl: text("logo_url"),
+  upiId: varchar("upi_id", { length: 120 }),
+  address: text("address"),
+
   // 10-Day Free Trial & Subscription (Dodo Payments)
   trialEndsAt: timestamp("trial_ends_at"),
   subscriptionStatus: varchar("subscription_status", { length: 32 }).default("TRIAL").notNull(), // 'TRIAL' | 'ACTIVE' | 'EXPIRED'

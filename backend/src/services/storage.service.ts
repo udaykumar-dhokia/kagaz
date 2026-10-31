@@ -173,3 +173,52 @@ export async function deleteDocument(fileKey: string): Promise<void> {
     console.warn(`Failed to shred document ${fileKey}:`, err);
   }
 }
+
+/**
+ * Uploads shop logo to Cloudinary folder "kagaz/shop_logos"
+ * or stores locally / returns data URI if Cloudinary is not configured.
+ */
+export async function uploadShopLogoImage(
+  shopId: string,
+  buffer: Buffer,
+  mimeType: string
+): Promise<string> {
+  if (isCloudinaryConfigured) {
+    const base64Data = buffer.toString("base64");
+    const dataUri = `data:${mimeType};base64,${base64Data}`;
+    const result = await cloudinary.uploader.upload(dataUri, {
+      folder: "kagaz/shop_logos",
+      public_id: `shop_${shopId}`,
+      overwrite: true,
+      invalidate: true,
+      resource_type: "image",
+      transformation: [
+        { width: 400, height: 400, crop: "limit" },
+        { quality: "auto" },
+        { fetch_format: "auto" },
+      ],
+    });
+    return result.secure_url;
+  }
+
+  // Local fallback mode: base64 data URI (universal, zero external dependency)
+  const base64Data = buffer.toString("base64");
+  return `data:${mimeType};base64,${base64Data}`;
+}
+
+/**
+ * Deletes custom shop logo from Cloudinary if stored there.
+ */
+export async function deleteShopLogoImage(shopId: string): Promise<void> {
+  if (isCloudinaryConfigured) {
+    try {
+      await cloudinary.uploader.destroy(`kagaz/shop_logos/shop_${shopId}`, {
+        resource_type: "image",
+        invalidate: true,
+      });
+    } catch (err) {
+      console.warn(`Failed to destroy Cloudinary logo for shop ${shopId}:`, err);
+    }
+  }
+}
+

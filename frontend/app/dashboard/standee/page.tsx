@@ -8,13 +8,19 @@ import { Badge } from "@/components/ui/badge";
 import { KagazLogo } from "@/components/ui/logo";
 import { toast } from "sonner";
 import { fetchShopStandee } from "@/lib/api";
+import { useAppSelector } from "@/lib/store/hooks";
+import { getShopAvatarUrl } from "@/lib/avatar";
 
 export default function DashboardStandeePage() {
+  const currentShop = useAppSelector((state) => state.auth.shop);
   const [token, setToken] = useState<string | null>(null);
-  const [shopName, setShopName] = useState<string>("My Print Shop");
+  const [storedShopName, setStoredShopName] = useState<string>("My Print Shop");
   const [qrData, setQrData] = useState<{ url: string; dataUrl: string; svg: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+
+  const shopName = currentShop?.name || storedShopName;
+  const shopLogoUrl = currentShop?.logoUrl;
 
   useEffect(() => {
     const storedToken = localStorage.getItem("kagaz_shop_token");
@@ -22,7 +28,7 @@ export default function DashboardStandeePage() {
 
     if (rawShop) {
       try {
-        setShopName(JSON.parse(rawShop).name);
+        setStoredShopName(JSON.parse(rawShop).name);
       } catch {}
     }
 
@@ -113,8 +119,13 @@ export default function DashboardStandeePage() {
           id="print-standee-card"
           className="w-full max-w-md bg-white text-neutral-900 p-6 sm:p-8 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xs text-center space-y-5 print:border-none print:shadow-none print:m-0 print:p-6"
         >
-          {/* Header - Shop Name Only */}
-          <div className="pt-2">
+          {/* Header - Shop Logo & Name */}
+          <div className="pt-2 flex flex-col items-center gap-2.5">
+            <img
+              src={getShopAvatarUrl(shopName, shopLogoUrl)}
+              alt={shopName}
+              className="h-16 w-16 rounded-2xl object-cover border border-neutral-200 shadow-2xs"
+            />
             <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-neutral-900">
               {shopName}
             </h2>

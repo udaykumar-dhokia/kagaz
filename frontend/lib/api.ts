@@ -9,6 +9,11 @@ export interface ShopCatalogResponse {
       id: string;
       name: string;
       slug: string;
+      ownerPhone?: string | null;
+      address?: string | null;
+      upiId?: string | null;
+      logoUrl?: string | null;
+      avatarUrl?: string;
     };
     catalog: {
       isBwEnabled: boolean;
@@ -828,6 +833,106 @@ export async function fetchBillingHistory(
   }
   return data;
 }
+
+export interface ShopProfile {
+  id: string;
+  name: string;
+  slug: string;
+  ownerEmail: string;
+  ownerPhone?: string | null;
+  address?: string | null;
+  upiId?: string | null;
+  logoUrl?: string | null;
+  avatarUrl: string;
+  isActive: boolean;
+  trialEndsAt?: string | null;
+  subscriptionStatus?: string | null;
+  subscriptionEndsAt?: string | null;
+  currentPlan?: string | null;
+  createdAt: string;
+}
+
+export interface ShopProfileResponse {
+  success: boolean;
+  message?: string;
+  data: ShopProfile;
+}
+
+export interface UpdateShopProfilePayload {
+  name?: string;
+  ownerPhone?: string | null;
+  address?: string | null;
+  upiId?: string | null;
+}
+
+export async function fetchShopProfile(token: string): Promise<ShopProfileResponse> {
+  const res = await fetch(`${API_BASE}/shops/profile`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch shop profile");
+  }
+  return data;
+}
+
+export async function updateShopProfile(
+  token: string,
+  payload: UpdateShopProfilePayload
+): Promise<ShopProfileResponse> {
+  const res = await fetch(`${API_BASE}/shops/profile`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to update shop profile");
+  }
+  return data;
+}
+
+export async function uploadShopLogo(
+  token: string,
+  file: File
+): Promise<{ success: boolean; message: string; data: { logoUrl: string; avatarUrl: string } }> {
+  const formData = new FormData();
+  formData.append("logo", file);
+
+  const res = await fetch(`${API_BASE}/shops/logo`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to upload shop logo");
+  }
+  return data;
+}
+
+export async function deleteShopLogo(
+  token: string
+): Promise<{ success: boolean; message: string; data: { logoUrl: null; avatarUrl: string } }> {
+  const res = await fetch(`${API_BASE}/shops/logo`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to remove shop logo");
+  }
+  return data;
+}
+
 
 
 

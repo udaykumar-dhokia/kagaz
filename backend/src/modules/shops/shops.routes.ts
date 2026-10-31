@@ -6,6 +6,8 @@ import { shops, shopPrintSettings, shopAddons } from "../../db/schema";
 import { requireShopAuth, type AppEnv } from "../../middlewares/auth.middleware";
 import { generateShopQr } from "../../services/qr.service";
 import { dodoService } from "../../services/dodo.service";
+import { getShopAvatarUrl } from "../../utils/avatar";
+import { uploadShopLogoImage, deleteShopLogoImage } from "../../services/storage.service";
 
 export const shopsRoutes = new Hono<AppEnv>();
 
@@ -21,6 +23,10 @@ shopsRoutes.get("/:slug/catalog", async (c) => {
       id: shops.id,
       name: shops.name,
       slug: shops.slug,
+      ownerPhone: shops.ownerPhone,
+      address: shops.address,
+      upiId: shops.upiId,
+      logoUrl: shops.logoUrl,
       isActive: shops.isActive,
       createdAt: shops.createdAt,
       trialEndsAt: shops.trialEndsAt,
@@ -67,6 +73,11 @@ shopsRoutes.get("/:slug/catalog", async (c) => {
         id: shop.id,
         name: shop.name,
         slug: shop.slug,
+        ownerPhone: shop.ownerPhone,
+        address: shop.address,
+        upiId: shop.upiId,
+        logoUrl: shop.logoUrl,
+        avatarUrl: getShopAvatarUrl(shop.name, shop.logoUrl),
       },
       catalog: {
         isBwEnabled: settings?.isBwEnabled ?? true,
@@ -203,4 +214,156 @@ shopsRoutes.delete("/addons/:id", requireShopAuth, async (c) => {
     message: "Add-on removed from catalog",
   });
 });
+
+// ==========================================
+// 4. PROTECTED: Shop Profile & Branding
+// ==========================================
+
+// GET /api/v1/shops/profile
+shopsRoutes.get("/profile", requireShopAuth, async (c) => {
+  const shopId = c.get("shopId");
+  const [shop] = await db
+    .select({
+      id: shops.id,
+      name: shops.name,
+      slug: shops.slug,
+      ownerEmail: shops.ownerEmail,
+      ownerPhone: shops.ownerPhone,
+      address: shops.address,
+      upiId: shops.upiId,
+      logoUrl: shops.logoUrl,
+      isActive: shops.isActive,
+      trialEndsAt: shops.trialEndsAt,
+      subscriptionStatus: shops.subscriptionStatus,
+      subscriptionEndsAt: shops.subscriptionEndsAt,
+      currentPlan: shops.currentPlan,
+      createdAt: shops.createdAt,
+    })
+    .from(shops)
+    .where(eq(shops.id, shopId));
+
+  if (!shop) {
+    return c.json({ success: false, message: "Shop not found" }, 404);
+  }
+
+  return c.json({
+    success: true,
+    data: {
+      ...shop,
+      avatarUrl: getShopAvatarUrl(shop.name, shop.logoUrl),
+    },
+  });
+});
+
+const updateProfileSchema = z.object({
+  name: z.string().min(2).max(100).optional(),
+  ownerPhone: z.string().max(20).optional().nullable(),
+  address: z.string().max(500).optional().nullable(),
+  upiId: z.string().max(120).optional().nullable(),
+});
+
+// PUT /api/v1/shops/profile
+shopsRoutes.put("/profile", requireShopAuth, async (c) => {
+  const shopId = c.get("shopId");
+  const body = await c.req.json();
+  const parsed = updateProfileSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ success: false, errors: parsed.error.flatten().fieldErrors }, 400);
+  }
+
+  const valuesToUpdate: Record<string, any> = { updatedAt: new Date() };
+  if (parsed.data.name !== undefined) valuesToUpdate.name = parsed.data.name.trim();
+  if (parsed.data.ownerPhone !== undefined) {
+    valuesToUpdate.ownerPhone = parsed.data.ownerPhone ? parsed.data.ownerPhone.trim() : null;
+  }
+  if (parsed.data.address !== undefined) {
+    valuesToUpdate.address = parsed.data.address ? parsed.data.address.trim() : null;
+  }
+  if (parsed.data.upiId !== undefined) {
+    valuesToUpdate.upiId = parsed.data.upiId ? parsed.data.upiId.trim() : null;
+  }
+
+  const [updatedShop] = await db
+    .update(shops)
+    .set(valuesToUpdate)
+    .where(eq(shops.id, shopId))
+    .returning();
+
+  return c.json({
+    success: true,
+    message: "Shop profile updated successfully",
+    data: {
+      ...updatedShop,
+      avatarUrl: getShopAvatarUrl(updatedShop.name, updatedShop.logoUrl),
+    },
+  });
+});
+
+// POST /api/v1/shops/logo (Multipart upload)
+shopsRoutes.post("/logo", requireShopAuth, async (c) => {
+  const shopId = c.get("shopId");
+  try {
+    const formData = await c.req.formData();
+    const file = formData.get("logo");
+
+    if (!file || typeof file === "string" || !(file instanceof Blob)) {
+      return c.json({ success: false, message: "A valid image file ('logo') is required" }, 400);
+    }
+
+    const mimeType = file.type || "image/png";
+    if (!["image/jpeg", "image/png", "image/webp", "image/svg+xml"].includes(mimeType)) {
+      return c.json({ success: false, message: "Only PNG, JPG, WEBP, or SVG images are supported" }, 400);
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    if (buffer.length > 5 * 1024 * 1024) {
+      return c.json({ success: false, message: "Image file size exceeds 5MB limit" }, 400);
+    }
+
+    const logoUrl = await uploadShopLogoImage(shopId, buffer, mimeType);
+
+    const [updatedShop] = await db
+      .update(shops)
+      .set({ logoUrl, updatedAt: new Date() })
+      .where(eq(shops.id, shopId))
+      .returning();
+
+    return c.json({
+      success: true,
+      message: "Shop logo uploaded successfully",
+      data: {
+        logoUrl,
+        avatarUrl: getShopAvatarUrl(updatedShop.name, logoUrl),
+      },
+    });
+  } catch (err: any) {
+    console.error("Failed to upload shop logo:", err);
+    return c.json({ success: false, message: err.message || "Failed to upload shop logo" }, 500);
+  }
+});
+
+// DELETE /api/v1/shops/logo
+shopsRoutes.delete("/logo", requireShopAuth, async (c) => {
+  const shopId = c.get("shopId");
+  await deleteShopLogoImage(shopId);
+
+  const [updatedShop] = await db
+    .update(shops)
+    .set({ logoUrl: null, updatedAt: new Date() })
+    .where(eq(shops.id, shopId))
+    .returning();
+
+  return c.json({
+    success: true,
+    message: "Shop logo removed. Default avatar restored.",
+    data: {
+      logoUrl: null,
+      avatarUrl: getShopAvatarUrl(updatedShop.name, null),
+    },
+  });
+});
+
 
