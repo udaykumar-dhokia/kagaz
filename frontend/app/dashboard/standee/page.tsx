@@ -79,7 +79,7 @@ export default function DashboardStandeePage() {
   }
 
   return (
-    <div className="space-y-5 max-w-4xl">
+    <div className="space-y-5 max-w-4xl mx-auto w-full">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 print:hidden">
         <div>
