@@ -91,7 +91,7 @@ function DashboardSidebarNav({
   ];
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-neutral-200 dark:border-neutral-800">
+    <Sidebar collapsible="icon" className="border-r border-neutral-200 dark:border-neutral-800 print:hidden">
       {/* Sidebar Header */}
       <SidebarHeader
         className={cn(
@@ -275,9 +275,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       />
 
       {/* Main Content Area */}
-      <SidebarInset className="bg-neutral-50/40 dark:bg-neutral-950 flex flex-col flex-1">
+      <SidebarInset className="bg-neutral-50/40 dark:bg-neutral-950 flex flex-col flex-1 print:bg-white print:p-0 print:m-0 print:block">
         {/* Top Header Bar */}
-        <header className="h-14 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md px-4 flex items-center justify-between sticky top-0 z-40">
+        <header className="h-14 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md px-4 flex items-center justify-between sticky top-0 z-40 print:hidden">
           <div className="flex items-center gap-3">
             <SidebarTrigger className="h-8 w-8 text-neutral-600 rounded-lg" />
             <Separator orientation="vertical" className="bg-neutral-200 dark:border-neutral-800" />
@@ -321,7 +321,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Dashboard Child View */}
-        <main className="p-4 sm:p-6 flex-1 max-w-6xl w-full mx-auto">{children}</main>
+        <main className="p-4 sm:p-6 flex-1 max-w-6xl w-full mx-auto print:p-0 print:m-0 print:max-w-none print:w-full">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

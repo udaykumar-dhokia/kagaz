@@ -135,3 +135,33 @@
     cursor: pointer;
   }
 }
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+
+  /* Force exact colors and backgrounds on modern browsers */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide app chrome, navigations, and headers */
+  header,
+  aside,
+  [data-sidebar="sidebar"],
+  [data-sidebar="trigger"],
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
