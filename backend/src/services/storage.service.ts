@@ -122,26 +122,53 @@ export async function saveLocalFile(fileKey: string, buffer: Buffer): Promise<vo
  */
 export async function getFileBuffer(fileKey: string): Promise<Buffer> {
   if (isCloudinaryConfigured) {
-    // Generate secure URL to fetch the raw file from Cloudinary
-    const fileUrl = cloudinary.url(fileKey, {
-      resource_type: "raw",
-      secure: true,
-    });
-
-    const response = await fetch(fileUrl);
-    if (!response.ok) {
-      // Try fallback with resource_type: "image" or "auto" in case it was uploaded as an image
-      const fallbackUrl = cloudinary.url(fileKey, { resource_type: "image", secure: true });
-      const fallbackResp = await fetch(fallbackUrl);
-      if (!fallbackResp.ok) {
-        throw new Error(`Failed to download file from Cloudinary: ${response.statusText}`);
+    // 1. Primary: Authenticated private download URL (bypasses Cloudinary's default PDF CDN restrictions)
+    try {
+      const rawDownloadUrl = cloudinary.utils.private_download_url(fileKey, "", {
+        resource_type: "raw",
+        type: "upload",
+      });
+      const response = await fetch(rawDownloadUrl);
+      if (response.ok) {
+        const arrayBuffer = await response.arrayBuffer();
+        return Buffer.from(arrayBuffer);
       }
-      const fallbackArray = await fallbackResp.arrayBuffer();
-      return Buffer.from(fallbackArray);
+    } catch (err) {
+      console.warn(`[Storage] Private raw download attempt failed for ${fileKey}:`, err);
     }
 
-    const arrayBuffer = await response.arrayBuffer();
-    return Buffer.from(arrayBuffer);
+    // 2. Fallback: Authenticated private download URL with resource_type: "image"
+    try {
+      const imgDownloadUrl = cloudinary.utils.private_download_url(fileKey, "", {
+        resource_type: "image",
+        type: "upload",
+      });
+      const imgResp = await fetch(imgDownloadUrl);
+      if (imgResp.ok) {
+        const arrayBuffer = await imgResp.arrayBuffer();
+        return Buffer.from(arrayBuffer);
+      }
+    } catch (err) {
+      console.warn(`[Storage] Private image download attempt failed for ${fileKey}:`, err);
+    }
+
+    // 3. Fallback: Signed CDN URL
+    try {
+      const signedCdnUrl = cloudinary.url(fileKey, {
+        resource_type: "raw",
+        secure: true,
+        sign_url: true,
+      });
+      const cdnResp = await fetch(signedCdnUrl);
+      if (cdnResp.ok) {
+        const arrayBuffer = await cdnResp.arrayBuffer();
+        return Buffer.from(arrayBuffer);
+      }
+    } catch (err) {
+      console.warn(`[Storage] Signed CDN download attempt failed for ${fileKey}:`, err);
+    }
+
+    throw new Error(`Failed to download file from Cloudinary: All retrieval strategies failed for ${fileKey}`);
   }
 
   // Local fallback
