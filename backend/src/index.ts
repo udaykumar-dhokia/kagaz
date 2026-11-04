@@ -120,6 +120,7 @@ console.log(`🚀 Kagaz Backend running on Bun: http://localhost:${env.PORT}`);
 
 export default {
   port: env.PORT,
+  hostname: "0.0.0.0",
   fetch: app.fetch,
   websocket,
 };
